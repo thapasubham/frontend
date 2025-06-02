@@ -15,6 +15,7 @@ const config: Config = {
     "!src/**/d.{ts,tsx}",
     "!/node_modules",
   ],
+  restoreMocks: true,
   transform: {
     "^.+\\.(ts|tsx)$": [
       "ts-jest",
