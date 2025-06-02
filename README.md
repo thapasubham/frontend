@@ -1,5 +1,4 @@
-# React + TypeScript + Vite
-
+# UBA Frontend
 ## Requirement
 
 - [Docker](https://www.docker.com/)
