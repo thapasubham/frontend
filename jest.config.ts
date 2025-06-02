@@ -23,6 +23,9 @@ const config: Config = {
       },
     ],
   },
+  moduleNameMapper: {
+    "\\.(css|less|scss|sass)$": "identity-obj-proxy",
+  },
 };
 
 export default config;
