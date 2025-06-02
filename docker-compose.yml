@@ -1,0 +1,11 @@
+services:
+    frontend:
+      build: .
+      restart: unless-stopped
+      ports:
+        - 5000:5000
+      volumes:
+      - type: bind
+        source: ./src
+        target: /app/src
+        read_only: true
