@@ -1,4 +1,4 @@
-.login-form {
+.user-form {
     display: block;
     padding: 20px;
     border-radius: 8px;
@@ -7,22 +7,35 @@
     margin: 20px auto;
 }
 
-.login-form form {
+.user-form form {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.login-form label {
+.user-form label {
     color: white;
     font-weight: bold;
     text-align: left;
 }
 
-.login-form input {
+.user-form input {
     padding: 10px;
     border-radius: 5px;
     border: none;
     background-color: #333;
     color: white;
+}
+
+.user-form input:focus {
+    outline: #00c4ff solid 1px;
+}
+
+.show-password {
+    align-self: flex-start;
+    display: inline-block;
+}
+
+.show-password {
+    border-radius: 10px;
 }
