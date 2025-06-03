@@ -12,7 +12,7 @@ const config: Config = {
     "!src/**/*.test.{ts,tsx}",
     "!src/**/superTest.{ts,tsx}",
     "!src/**/main.{ts,tsx}",
-    "!src/**/d.{ts,tsx}",
+    "!src/**/*d.{ts,tsx}",
     "!/node_modules",
   ],
   restoreMocks: true,
