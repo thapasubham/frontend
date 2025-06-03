@@ -1,4 +1,4 @@
-import React, { useContext, useState, ReactNode } from "react";
+import React, { useContext, useState} from "react";
 
 type AuthContextTypes = {
     isLogged: boolean;
@@ -9,7 +9,7 @@ const AuthContext = React.createContext<AuthContextTypes | null>(null);
 
 
 
-function AuthProvider({ children}) {
+function AuthProvider({ children }: { children: React.ReactNode }) {
     const [isLogged, setIsLogged] = useState(false);
 
     return (

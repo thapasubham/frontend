@@ -1,5 +1,3 @@
-import { render } from "@testing-library/react";
-
 function PageNotFound() {
     return (
         <>
