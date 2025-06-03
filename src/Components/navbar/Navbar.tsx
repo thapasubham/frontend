@@ -1,20 +1,27 @@
-import About from '../about/About';
-import Home from '../home/home';
 import './navbar.css';
+import Logout from "../user/Logout.tsx";
+import {useAuth} from "../../auth/AuthContext.tsx";
+
 
 function NavBar() {
+
+    const{isLogged} =useAuth() ;
+
     return (
         <>
             <nav className="navbar">
 
                 <ul className="nav-links">
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/about">About</a></li>
-                    <li><a href="/login">Login</a></li>
+                    <li data-testid='link_home'><a href="/">Home</a></li>
+                    <li id='link_about'><a href="/about">About</a></li>
+
+                    {isLogged ?
+                         (<Logout />)
+                        :
+                        (<li id='link_login'><a href="/login">Login</a></li>)
+                    }
                 </ul>
-            </nav>
-            <Home />
-            <About />
+            </nav >
         </>
     );
 }
