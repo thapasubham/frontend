@@ -1,6 +1,9 @@
-import Login from "../../Components/user/Login.tsx";
+
 import {fireEvent,  render} from "@testing-library/react";
-import AuthProvider from "../../auth/AuthContext.tsx";
+import AuthProvider from "../../../auth/AuthContext.tsx";
+import Login from "../../../Components/user/Login.tsx";
+
+
 
 describe("login Test", ()=>{
     it("Empty input", ()=>{

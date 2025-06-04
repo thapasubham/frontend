@@ -1,23 +1,23 @@
-import signUp from "../../api/user/signUp.ts";
+import { fireEvent, render, waitFor } from "@testing-library/react";
+import signUp from "../../../api/user/signUp";
+import SignUp from "../../../Components/user/SignUp.tsx";
 
-import {fireEvent, render, waitFor} from "@testing-library/react";
-import SignUp from "../../Components/user/SignUp.tsx";
 
 
-jest.mock("../../api/user/signUp");
+jest.mock("../../../api/user/signUp");
 describe("Sign up", () => {
     beforeEach(() => {
         (signUp as jest.Mock).mockReset()
     })
 
     it("Form is rendering correctly", () => {
-        const {getByTestId} =render(<SignUp/>)
+        const { getByTestId } = render(<SignUp />)
 
         const firstname = getByTestId("firstname") as HTMLInputElement;
         const lastname = getByTestId("lastname") as HTMLInputElement;
         const email = getByTestId("email") as HTMLInputElement;
         const password = getByTestId("password") as HTMLInputElement;
-        const phoneNumer = getByTestId("phoneNumber") as HTMLInputElement;
+        const phoneNumber = getByTestId("phoneNumber") as HTMLInputElement;
         const confirmPassword = getByTestId("confirmPassword") as HTMLInputElement;
         const showPassword = getByTestId("showPassword") as HTMLInputElement;
 
@@ -25,7 +25,7 @@ describe("Sign up", () => {
         expect(lastname.value).toEqual("");
         expect(email.value).toEqual("");
         expect(password.value).toEqual("");
-        expect(phoneNumer.value).toEqual("");
+        expect(phoneNumber.value).toEqual("");
         expect(confirmPassword.value).toEqual("");
         expect(showPassword.value).toEqual("on");
 
