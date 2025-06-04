@@ -10,6 +10,7 @@ const config: Config = {
   collectCoverageFrom: [
     "src/**/*.{ts,tsx}",
     "!src/**/*.test.{ts,tsx}",
+    "!src/**/types/*.{ts,tsx}",
     "!src/**/superTest.{ts,tsx}",
     "!src/**/main.{ts,tsx}",
     "!src/**/*d.{ts,tsx}",
