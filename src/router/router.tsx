@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import About from "../Components/about/About";
 import Dashboard from "../Components/dashboard/dashboard.tsx";
 import Home from "../Components/home";
-import {SignUp, Login, Logout, EditUser} from "../Components/user/index"
+import { SignUp, Login, Logout, EditUser, DeleteUser } from "../Components/user/index"
 import PageNotFound from "../Components/PageNotFound.tsx";
 export function Router() {
     return (
@@ -17,6 +17,7 @@ export function Router() {
                 <Route path='/signup' Component={SignUp} />
                 <Route path='*' Component={PageNotFound} />
                 <Route path='/editUser/:id' Component={EditUser} />
+                <Route path='/deleteUser/:id' Component={DeleteUser} />
             </Routes>
         </BrowserRouter>
     )

@@ -16,8 +16,13 @@ export function SignUp() {
 
     async function register(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        const result = await signUp(form);
-        alert(result.message);
+        if(form.confirmPassword!==form.password){
+            alert("Passwords do not match");
+        } else {
+            const result = await signUp(form);
+
+            alert(result.message);
+        }
     }
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
