@@ -1,5 +1,7 @@
-import { userData } from "../../types/userData.ts";
 import { delay } from "../delay.ts";
+
+import {userTypes} from "../../types/user.ts";
+import {userData} from "../../types/userData.ts";
 
 async function loginUser({
   email,
@@ -13,7 +15,7 @@ async function loginUser({
     console.log("Logged in");
     await delay(1000);
     const result = userData.some(
-      (u) => u.email === email && u.password === password
+      (u:userTypes) => u.email === email && u.password === password
     );
     return result;
   } catch (e) {

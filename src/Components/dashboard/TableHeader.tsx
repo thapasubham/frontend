@@ -4,7 +4,7 @@ function TableHeader() {
             <thead>
                 <tr>
                     <td>
-                        FIrstname
+                        Firstname
                     </td>
                     <td>
                         Lastname
