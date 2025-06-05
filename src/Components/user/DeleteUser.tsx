@@ -13,7 +13,7 @@ function DeleteUser() {
             if (result.status === 200) {
                 alert(result.message);
             } else {
-                alert(`Failed to delete user: ${result.message}`);
+                alert(`${result.message}`);
             }
         } catch (e) {
             setError("Something went wrong during deletion");
@@ -26,7 +26,7 @@ function DeleteUser() {
             <h3>Delete User</h3>
             {error && <p style={{ color: "red" }}>{error}</p>}
             <p>Are you sure you want to delete user ID: {id}?</p>
-            <button onClick={handleDelete}>Yes, Delete</button>
+            <button id="deleteButton" onClick={handleDelete}>Confirm</button>
         </div>
     );
 }

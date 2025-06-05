@@ -1,6 +1,6 @@
-import React, { useContext, useState} from "react";
+import React, { useContext, useState } from "react";
 
-type AuthContextTypes = {
+export type AuthContextTypes = {
     isLogged: boolean;
     setIsLogged: (isLogged: boolean) => void;
 };
@@ -10,8 +10,10 @@ const AuthContext = React.createContext<AuthContextTypes | null>(null);
 
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
-    const [isLogged, setIsLogged] = useState(false);
-
+    const [isLogged, setIsLogged] = useState(() => {
+        const stored = localStorage.getItem("isLogged");
+        return stored === "true";
+    });
     return (
         <AuthContext.Provider value={{ isLogged, setIsLogged }}>
             {children}
