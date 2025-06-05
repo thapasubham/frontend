@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import "./form.css"
 import loginUser from "../../api/user/login.ts";
 import { useAuth } from "../../auth/AuthContext.tsx";
+import {useNavigate} from "react-router-dom";
 
 function Login() {
     const [user, setUser] = useState({
         email: "",
         password: ""
     })
+    const navigate = useNavigate();
     const { setIsLogged } = useAuth();
 
     function userInput(e: React.ChangeEvent<HTMLInputElement>) {
@@ -22,9 +24,10 @@ function Login() {
         if (result === true) {
             setIsLogged(true);
             localStorage.setItem("isLogged", "true");
-
+            alert("Logged in successfully");
+            navigate("/home");
         } else {
-            alert("User doesnt exists");
+            alert();
         }
     }
     return (

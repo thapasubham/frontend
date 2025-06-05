@@ -1,4 +1,4 @@
-import { userTypes } from "../../types/user";
+import { userTypes } from "../../types/user.ts";
 
 function User({ user }: { user: userTypes }) {
     return (

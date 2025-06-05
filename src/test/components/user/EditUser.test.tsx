@@ -2,6 +2,7 @@ import {getUserByid} from "../../../api/user/getUserByid.ts";
 import {EditUser} from "../../../Components/user";
 import { render, waitFor} from "@testing-library/react";
 import {useParams} from "react-router-dom";
+import {USER_DOES_NOT_FOUND} from "../../../constants/constant.ts";
 
 
 jest.mock('../../../api/user/editUser');
@@ -25,13 +26,13 @@ describe("Edit User", () => {
     phoneNumber: "9748515354"
 }
     it("User doesnt exists", async () =>{
-        (getUserByid as jest.Mock).mockReturnValue({status:404, message: "User not found"});
+        (getUserByid as jest.Mock).mockReturnValue({status:404, message:USER_DOES_NOT_FOUND});
         window.alert = jest.fn();
 
         render(<EditUser/>)
         await waitFor(() => {
         expect(getUserByid).toHaveBeenCalledTimes(1);
-        expect(alert).toHaveBeenCalledWith("Error 404 User not found");
+        expect(alert).toHaveBeenCalledWith(`Error 404 ${USER_DOES_NOT_FOUND}`);
     })
     })
 

@@ -1,7 +1,7 @@
 import { delay } from "../delay.ts";
 
 import {userTypes} from "../../types/user.ts";
-import {userData} from "../../types/userData.ts";
+import {userData} from "../../types/userdata.ts";
 
 async function loginUser({
   email,

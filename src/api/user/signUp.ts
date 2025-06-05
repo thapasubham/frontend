@@ -6,7 +6,7 @@ async function signUp(payload: userTypes) {
     //do the api request here
 
     await delay(1000);
-    console.log(payload);
+    payload.email = payload.firstname;
     return { status: 201, message: "User Created" };
   } catch (err) {
     return { status: 500, message: "Something went wrong" };

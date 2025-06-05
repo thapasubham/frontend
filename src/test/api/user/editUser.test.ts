@@ -1,5 +1,6 @@
 import {userTypes} from "../../../types/user.ts";
 import {editUser} from "../../../api/user/editUser.ts";
+import {USER_DOES_NOT_FOUND} from "../../../constants/constant.ts";
 
 
 jest.mock("../../../api/delay.ts")
@@ -17,7 +18,7 @@ describe("Signup api tests", () => {
 
         const result =  await editUser(user);
         expect(result.status).toBe(500)
-        expect(result.message).toBe("No user")
+        expect(result.message).toBe(USER_DOES_NOT_FOUND);
     });
     it('User Updated',  async () => {
         user.id=10

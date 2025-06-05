@@ -4,7 +4,11 @@ import AuthProvider from "../../../auth/AuthContext.tsx";
 import Login from "../../../Components/user/Login.tsx";
 
 
-
+const mockedUsedNavigate = jest.fn();
+jest.mock("react-router-dom", () => ({
+    useNavigate: () => mockedUsedNavigate,
+}))
+jest.mock("../../../api/login")
 describe("login Test", ()=>{
     it("Empty input", ()=>{
 
@@ -29,5 +33,16 @@ describe("login Test", ()=>{
         expect(email.value).toEqual('subham@gmail.com');
         expect(password.value).toEqual('subham123');
     })
+    it("Should login", ()=>{
 
+        const {getByTestId} = render(<AuthProvider><Login /></AuthProvider>);
+        const email = getByTestId("email")  as HTMLInputElement;
+        const password = getByTestId("password")  as HTMLInputElement;
+
+        fireEvent.change(email, { target: { value: "subham@gmail.com" } });
+        fireEvent.change(password, { target: { value: "subham123" } });
+
+        expect(email.value).toEqual('subham@gmail.com');
+        expect(password.value).toEqual('subham123');
+    })
 })
