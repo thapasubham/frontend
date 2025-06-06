@@ -7,6 +7,11 @@ import {useParams} from "react-router-dom"
 jest.mock("react-router-dom", ()=>({
     useParams: jest.fn ()
 }));
+jest.mock("../../../api/apiURL", () => ({
+    config: {
+        apiUrl: "http://localhost:mock",
+    },
+}));
 jest.mock("../../../api/user/deleteUser");
 window.alert = jest.fn();
 describe("Delete component test", () => {

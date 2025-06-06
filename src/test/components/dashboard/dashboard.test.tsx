@@ -3,6 +3,7 @@ import getUser from "../../../api/user/getUser";
 import Dashboard from "../../../Components/dashboard/dashboard.tsx";
 import { userTypes } from "../../../types/user.ts";
 import { useAuth } from "../../../auth/AuthContext.tsx";
+import {SOMETHING_WENT_WRONG} from "../../../constants/constant.ts";
 
 const mockedUsedNavigate = jest.fn();
 jest.mock("../../../auth/AuthContext", () => ({
@@ -11,7 +12,13 @@ jest.mock("../../../auth/AuthContext", () => ({
 }));
 jest.mock("react-router-dom", () => ({
     useNavigate: () => mockedUsedNavigate,
-}))
+}));
+jest.mock("../../../api/apiURL", () => ({
+    config: {
+        apiUrl: "http://localhost:mock",
+    },
+}));
+
 jest.mock("../../../api/user/getUser");
 describe("Dashboard Test", () => {
     beforeEach(() => {
@@ -27,7 +34,7 @@ describe("Dashboard Test", () => {
     });
     it("Empty users", async () => {
         (useAuth as jest.Mock).mockReturnValue({ isLogged: true });
-        (getUser as jest.Mock).mockResolvedValue([]);
+        (getUser as jest.Mock).mockResolvedValue({status: 404, message: "No User Found"});
         render(<Dashboard />);
         await waitFor(() => {
             const result = screen.getByTestId("error")
@@ -36,6 +43,17 @@ describe("Dashboard Test", () => {
         });
     })
 
+    it("Error When fetching the data", async () => {
+        (useAuth as jest.Mock).mockReturnValue({ isLogged: true });
+        (getUser as jest.Mock).mockRejectedValue(new Error(SOMETHING_WENT_WRONG));
+        render(<Dashboard />);
+        await waitFor(() => {
+            const result = screen.getByTestId("error") as HTMLElement;
+
+            expect(result).toBeInTheDocument();
+            expect(result.textContent).toEqual(SOMETHING_WENT_WRONG)
+        });
+    })
     it("Renders users", async () => {
         (useAuth as jest.Mock).mockReturnValue({ isLogged: true });
 
@@ -51,7 +69,7 @@ describe("Dashboard Test", () => {
         ];
 
         // Mock user-fetching function
-        (getUser as jest.Mock).mockResolvedValue(users);
+        (getUser as jest.Mock).mockResolvedValue({status: 200, data: users});
 
 
         render(<Dashboard />);
@@ -60,7 +78,8 @@ describe("Dashboard Test", () => {
         const prevButton = await screen.findByTestId("previous-button") as HTMLButtonElement;
         fireEvent.click(prevButton);
         await waitFor(() => {
-            expect(getUser).toBeCalledTimes(1);
+            expect(getUser).toHaveBeenCalledTimes(1);
+            expect(screen.getByText(users[0].firstname)).toBeInTheDocument();
         })
     })
 

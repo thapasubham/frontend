@@ -31,12 +31,14 @@ function Dashboard() {
     const getUsers = async () => {
         setLoading("Loading...");
         try {
-            const data = await getUser(limit, offset);
-            if (data.length === 0) {
-                setError("No Users");
+        const response = await getUser(limit, offset);
+
+
+            if (response.status!==200) {
+                setError("No User Found");
                 setLoading("");
             } else {
-                setUsers(data);
+                setUsers(()=>response.data);
                 setLoading("");
                 setError("");
             }
@@ -59,7 +61,6 @@ function Dashboard() {
     }
     return (
         <div>
-
             <div className="pagination">
                 <input type="text" placeholder="firstname" value={search}
                     onChange={(e) => setSearch(e.target.value)} />

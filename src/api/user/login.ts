@@ -1,7 +1,6 @@
-import { delay } from "../delay.ts";
+import {config} from "../apiURL.ts";
+import axios, {isAxiosError} from "axios";
 
-import {userTypes} from "../../types/user.ts";
-import {userData} from "../../types/userdata.ts";
 
 async function loginUser({
   email,
@@ -11,15 +10,28 @@ async function loginUser({
   password: string;
 }) {
   try {
-    //perfrom network request
-    console.log("Logged in");
-    await delay(1000);
-    const result = userData.some(
-      (u:userTypes) => u.email === email && u.password === password
-    );
+      const {apiUrl}= config;
+    // perfrom network request
+    const url = `${apiUrl}/user/login`;
+
+    const result = await axios.post(url, {email, password}, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+        },
+    )
+
     return result;
-  } catch (e) {
-    return e
+  }
+  catch (error) {
+
+      if (isAxiosError(error) && error.response) {
+
+          const { status, data } = error.response|| {status: 500, data:"Failed to call api"};
+          throw { status, message: data.message || "Login failed" };
+      }
   }
 }
 

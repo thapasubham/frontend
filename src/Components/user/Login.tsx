@@ -3,6 +3,8 @@ import "./form.css"
 import loginUser from "../../api/user/login.ts";
 import { useAuth } from "../../auth/AuthContext.tsx";
 import {useNavigate} from "react-router-dom";
+import {isAxiosError} from "axios";
+import {LOGGED_IN_SUCCESS} from "../../constants/constant.ts";
 
 function Login() {
     const [user, setUser] = useState({
@@ -19,16 +21,21 @@ function Login() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const result = await loginUser(user)
-
-        if (result === true) {
+        try {
+           const data= await loginUser(user);
+        console.log(data);
             setIsLogged(true);
             localStorage.setItem("isLogged", "true");
-            alert("Logged in successfully");
-            navigate("/home");
-        } else {
-            alert();
+            alert(LOGGED_IN_SUCCESS);
+            navigate("/");
+        } catch (error) {
+
+            if(isAxiosError(error)) {
+                alert(`${error.status}  ${error.message}`);
+            }
+            alert("Something went wrong");
         }
+
     }
     return (
         <>

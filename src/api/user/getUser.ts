@@ -1,15 +1,18 @@
-import { userData } from "../../types/userdata.ts";
-import { delay } from "../delay.ts";
+import {config} from "../apiURL.ts";
 
+const {apiUrl}= config;
 async function getUser(limit:number, offset:number) {
   //make api call here
+  const url = `${apiUrl}/user/?limit=${limit}&offset=${offset}`;
+  console.log(url);
+  const result = await fetch(url, {
+    method: "GET",
+  })
 
-  await delay(300);
   console.log(limit, offset);
-  console.log(userData);
-  const slicedUser = userData.slice(offset, offset + limit);
-  console.log(slicedUser);
-  return slicedUser;
+
+
+  return  {status: result.status ,data: await result.json()};
 }
 
 export default getUser;
