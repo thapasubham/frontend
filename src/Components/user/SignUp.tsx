@@ -16,14 +16,29 @@ export function SignUp() {
 
     async function register(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        if(form.confirmPassword!==form.password){
+
+        if (form.confirmPassword !== form.password) {
             alert("Passwords do not match");
-        } else {
+            return;
+        }
+
+        try {
             const result = await signUp(form);
 
-            alert(result.message);
+
+            if (result.status === 201) {
+                alert(result.message); // Should be a string
+                // Optionally redirect or reset form here
+            } else {
+                alert(result.message); // Handle error messages from backend
+            }
+
+        } catch (err) {
+            console.error("Registration error:", err);
+            alert((err as Error).message);
         }
     }
+
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const { name, value } = e.target;

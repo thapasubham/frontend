@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { editUser } from "../../api/user/editUser.ts";
-import { useParams } from "react-router-dom";
+import {useNavigate, useParams } from "react-router-dom";
 import { getUserByid } from "../../api/user/getUserByid.ts";
 import {SOMETHING_WENT_WRONG} from "../../constants/constant.ts";
 
@@ -13,37 +13,35 @@ function EditUser() {
             lastname: "",
             phoneNumber: "",
             email: "",
-            password: ""
         });
     const [error, setError] = useState("");
+    const navigate = useNavigate();
+    const fetchUser = async () => {
+        try {
+            const response = await getUserByid(user.id);
+
+            console.log(response);
+            if (response.status === 200) {
+                const userDate = response.data;
+                setUser(prev => ({ ...prev, ...userDate }));
+
+                setError("");
+
+            } else {
+                console.log(response);
+                const message = response.data.message as string;
+
+                alert(`Error ${response.status} ${message}`);
+            }
+        } catch (e) {
+            console.error(e);
+            setError(()=>SOMETHING_WENT_WRONG);
+        }
+
+    };
 
     useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const result = await getUserByid(user.id);
-
-                if (result.status === 200) {
-
-                    const userDate = result.data;
-                    setUser(prev => ({ ...prev, ...userDate }));
-
-                    setError("");
-                } else {
-                    const message = result.message as string;
-
-                    alert(`Error ${result.status} ${message}`);
-                }
-            } catch (e) {
-                console.error(e);
-                setError(()=>SOMETHING_WENT_WRONG);
-            }
-
-        };
-
-
         fetchUser();
-
-
 
     }, [id]);
 
@@ -54,6 +52,7 @@ function EditUser() {
         const result = await editUser(user);
         if(result.status === 200) {
             alert(result.message);
+            navigate("/dashboard");
         } else  {
         alert(result.message)
             }

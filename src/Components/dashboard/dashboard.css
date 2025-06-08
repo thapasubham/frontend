@@ -1,6 +1,6 @@
 .user-table {
     margin-top: 10px;
-    width: 500px;
+    width: 700px;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
@@ -10,21 +10,42 @@
 }
 
 .user-table thead {
-
     font-weight: bold;
 }
 .user-table p{
     text-align: center;
     color: hsl(185, 88%, 50%);
 }
+.list-filter input {
+    margin: 10px;
+     padding: 10px;
+    border-radius: 5px;
+    border: none;
+    background-color: #333;
+    color: white;
+}
 .pagination button {
-    margin-top: 10px;
+    margin: 10px;
     width: 20%;
     display: inline;
     background: #1f1f1f;
 }
 
 .pagination button:hover {
-    border: 1px solid #07a7cb;
+    border: 1px solid #0858ee;
     background: #494848
+}
+
+
+.actions button:hover {
+    border: 1px solid #00ffe9;
+}
+.delete-button {
+    border-radius: 10px;
+    background: #ff0000;
+    margin: 5px;
+}
+.edit-button {border-radius: 10px;
+    background: #007bff;
+    margin: 5px;
 }

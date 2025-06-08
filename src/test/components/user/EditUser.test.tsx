@@ -1,13 +1,18 @@
-import {getUserByid} from "../../../api/user/getUserByid.ts";
-import {EditUser} from "../../../Components/user";
-import { render, waitFor} from "@testing-library/react";
-import {useParams} from "react-router-dom";
-import {USER_DOES_NOT_FOUND} from "../../../constants/constant.ts";
+import { getUserByid } from "../../../api/user/getUserByid.ts";
+import { EditUser } from "../../../Components/user";
+import { render, waitFor } from "@testing-library/react";
+import { useParams } from "react-router-dom";
+import { USER_DOES_NOT_FOUND } from "../../../constants/constant.ts";
 
 
 jest.mock('../../../api/user/editUser');
 jest.mock("react-router-dom", () => ({
     useParams: jest.fn(),
+}));
+jest.mock("../../../api/apiURL", () => ({
+    config: {
+        apiUrl: "http://localhost:mock",
+    },
 }));
 jest.mock('../../../api/user/getUserByid');
 window.alert = jest.fn();
@@ -19,28 +24,28 @@ describe("Edit User", () => {
     });
 
     const user = {
-    id: 5,
-    firstname: "John",
-    lastname: "BloodBorne",
-    email: "john@b.com",
-    phoneNumber: "9748515354"
-}
-    it("User doesnt exists", async () =>{
-        (getUserByid as jest.Mock).mockReturnValue({status:404, message:USER_DOES_NOT_FOUND});
+        id: 5,
+        firstname: "John",
+        lastname: "BloodBorne",
+        email: "john@b.com",
+        phoneNumber: "9748515354"
+    }
+    it("User doesnt exists", async () => {
+        (getUserByid as jest.Mock).mockReturnValue({ status: 404, message: USER_DOES_NOT_FOUND });
         window.alert = jest.fn();
 
-        render(<EditUser/>)
+        render(<EditUser />)
         await waitFor(() => {
-        expect(getUserByid).toHaveBeenCalledTimes(1);
-        expect(alert).toHaveBeenCalledWith(`Error 404 ${USER_DOES_NOT_FOUND}`);
-    })
+            expect(getUserByid).toHaveBeenCalledTimes(1);
+            expect(alert).toHaveBeenCalledWith(`Error 404 ${USER_DOES_NOT_FOUND}`);
+        })
     })
 
-    it("User exists and renders correctly",async () =>{
-        (getUserByid as jest.Mock).mockReturnValue({status: 200, data: user});
-        const {getByTestId} = render(<EditUser/>)
+    it("User exists and renders correctly", async () => {
+        (getUserByid as jest.Mock).mockReturnValue({ status: 200, data: user });
+        const { getByTestId } = render(<EditUser />)
 
-        await waitFor(()=>{
+        await waitFor(() => {
             const firstname = getByTestId("edit-firstname") as HTMLInputElement;
             const lastname = getByTestId("edit-lastname") as HTMLInputElement;
             const email = getByTestId("edit-email") as HTMLInputElement;

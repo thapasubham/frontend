@@ -1,21 +1,31 @@
-function TableHeader() {
+function TableHeader({setFilter}:{setFilter: (filter: string) => void}) {
+    function handleClick(column: string){
+        setFilter(column)
+
+    }
+
+
+
     return (
         <>
             <thead>
                 <tr>
-                    <td>
+                    <td onClick={() => handleClick("firstname")}>
                         Firstname
                     </td>
-                    <td>
+                    <td onClick={() => handleClick("lastname")}>
                         Lastname
                     </td>
-                    <td>
+                    <td onClick={() => handleClick("email")}>
                         Email
                     </td>
-                    <td>
+                    <td onClick={() => handleClick("password")}>
                         Phone
                     </td>
-                </tr>
+                <td>
+                   Action
+                </td>
+                    </tr>
             </thead>
         </>
     )

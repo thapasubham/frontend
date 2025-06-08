@@ -3,7 +3,6 @@ import {editUser} from "../../../api/user/editUser.ts";
 import {USER_DOES_NOT_FOUND} from "../../../constants/constant.ts";
 
 
-jest.mock("../../../api/delay.ts")
 describe("Signup api tests", () => {
     const user: userTypes ={
         id: 0,

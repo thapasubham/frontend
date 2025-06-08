@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import "./form.css"
 import loginUser from "../../api/user/login.ts";
 import { useAuth } from "../../auth/AuthContext.tsx";
-import {useNavigate} from "react-router-dom";
-import {isAxiosError} from "axios";
-import {LOGGED_IN_SUCCESS} from "../../constants/constant.ts";
+import { useNavigate } from "react-router-dom";
+import { AxiosError, isAxiosError } from "axios";
+import { LOGGED_IN_SUCCESS } from "../../constants/constant.ts";
 
 function Login() {
     const [user, setUser] = useState({
@@ -22,18 +22,25 @@ function Login() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-           const data= await loginUser(user);
-        console.log(data);
-            setIsLogged(true);
-            localStorage.setItem("isLogged", "true");
-            alert(LOGGED_IN_SUCCESS);
-            navigate("/");
+            const data = await loginUser(user);
+
+            if (data.status === 200) {
+                setIsLogged(true);
+                localStorage.setItem("isLogged", "true");
+                alert(LOGGED_IN_SUCCESS);
+                navigate("/");
+            }
+            else {
+                alert(data.message);
+            }
         } catch (error) {
 
-            if(isAxiosError(error)) {
-                alert(`${error.status}  ${error.message}`);
+            if (isAxiosError(error) && error.response) {
+                const status = error.status;
+                // @ts-ignore
+                const message = (error as AxiosError).response.data.message;
+                alert(`${status} ${message}`);
             }
-            alert("Something went wrong");
         }
 
     }

@@ -15,9 +15,11 @@ function Dashboard() {
     const [users, setUsers] = useState<userTypes[]>([]);
     const { isLogged } = useAuth();
     const navigate = useNavigate();
-    const limit =2;
+    const limit =5;
     const [offset, setOffset] = useState(0);
     const [search, setSearch] = useState("");
+    const [filter, setFilter] = useState("");
+
 
 
     useEffect(() => {
@@ -27,11 +29,12 @@ function Dashboard() {
             navigate("/login");
         }
         getUsers();
-    }, [isLogged, offset]);
+    }, [isLogged, offset, filter]);
     const getUsers = async () => {
         setLoading("Loading...");
         try {
-        const response = await getUser(limit, offset);
+            console.log(filter);
+        const response = await getUser(limit, offset, filter);
 
 
             if (response.status!==200) {
@@ -61,20 +64,23 @@ function Dashboard() {
     }
     return (
         <div>
-            <div className="pagination">
+                <div className="dashboard">
+                <div className="list-filter">
                 <input type="text" placeholder="firstname" value={search}
                     onChange={(e) => setSearch(e.target.value)} />
-                < button data-testid="previous-button" onClick={handlePrevious}>Previous</button>
+                </div>
+                <div className="pagination">< button data-testid="previous-button" onClick={handlePrevious}>Previous</button>
 
                 <button data-testid="next-button" onClick={handleNext} disabled={!!error} >Next</button>
             </div>
+                </div>
             {error ? (
                 <p data-testid="error">{error}</p>
             ) : (
                 <>
                 {loading ? (<p>{loading}</p>): (
                     <table className="user-table">
-                        <TableHeader />
+                        <TableHeader  setFilter={setFilter} />
 
 
                                 <tbody>
