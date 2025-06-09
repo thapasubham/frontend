@@ -11,19 +11,31 @@
 
 .user-table thead {
     font-weight: bold;
+    cursor: pointer;
 }
 .user-table p{
     text-align: center;
     color: hsl(185, 88%, 50%);
 }
+.user-table th:hover {
+
+}
 .list-filter input {
     margin: 10px;
-     padding: 10px;
+    padding: 10px;
     border-radius: 5px;
     border: none;
     background-color: #333;
     color: white;
 }
+.list-filter input:focus {
+
+    outline: solid 1px hsl(185, 88%, 50%);
+}
+.list-filter select {
+    padding: 10px;
+}
+
 .pagination button {
     margin: 10px;
     width: 20%;

@@ -6,6 +6,7 @@ import { userTypes } from "../../types/user.ts";
 import "./dashboard.css"
 import { useAuth } from "../../auth/AuthContext.tsx";
 import { useNavigate } from "react-router-dom";
+import {USER_DOES_NOT_FOUND} from "../../constants/constant.ts";
 
 
 
@@ -19,31 +20,38 @@ function Dashboard() {
     const [offset, setOffset] = useState(0);
     const [search, setSearch] = useState("");
     const [filter, setFilter] = useState("");
-
-
+    const [orderBy, setOrderBy] = useState("");
+    const [searchBy, setSearchBy] = useState("");
 
     useEffect(() => {
         if (!isLogged) {
-
             setError("You need to login");
             navigate("/login");
+            return;
         }
-        getUsers();
-    }, [isLogged, offset, filter]);
+    getUsers();
+    }, [isLogged, offset, filter, orderBy, search]);
+
+    console.log(orderBy);
     const getUsers = async () => {
         setLoading("Loading...");
+        console.log(searchBy);
         try {
-            console.log(filter);
-        const response = await getUser(limit, offset, filter);
-
-
-            if (response.status!==200) {
-                setError("No User Found");
-                setLoading("");
-            } else {
+            console.log(limit, offset);
+        const response = await getUser(search, searchBy,limit, offset, orderBy, filter);
+        console.log(response);
+            if (response.data.length ===0) {
+                setError(USER_DOES_NOT_FOUND);
+                return;
+            }
+            if (response.data) {
                 setUsers(()=>response.data);
                 setLoading("");
                 setError("");
+            } else {
+                setError("No User Found");
+                setLoading("");
+
             }
         } catch (err) {
             setError((err as Error).message);
@@ -66,8 +74,17 @@ function Dashboard() {
         <div>
                 <div className="dashboard">
                 <div className="list-filter">
-                <input type="text" placeholder="firstname" value={search}
+                <input type="text" placeholder={searchBy} value={search}
                     onChange={(e) => setSearch(e.target.value)} />
+                    <select defaultValue="firstname" value={searchBy} onChange={(e) =>{
+                        setSearchBy(e.target.value)
+                        setSearch("");
+                    }}>
+                        <option value="firstname">Firstname</option>
+                        <option value="lastname">Lastname</option>
+                        <option value="email" >Email</option>
+                       <option value="phoneNumber">Phone No</option>
+                    </select>
                 </div>
                 <div className="pagination">< button data-testid="previous-button" onClick={handlePrevious}>Previous</button>
 
@@ -80,7 +97,7 @@ function Dashboard() {
                 <>
                 {loading ? (<p>{loading}</p>): (
                     <table className="user-table">
-                        <TableHeader  setFilter={setFilter} />
+                        <TableHeader  setFilter={setFilter} setOrderBy={setOrderBy} />
 
 
                                 <tbody>
