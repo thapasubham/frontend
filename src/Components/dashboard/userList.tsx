@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import TableHeader from "./TableHeader.tsx";
 import getUser from "../../api/user/getUser.ts";
-import Userlist from "./Userlist.tsx";
+import Userlist from "./UserRow.tsx";
 import { userTypes } from "../../types/user.ts";
-import "./dashboard.css"
+import "./userList.css"
 import { useAuth } from "../../auth/AuthContext.tsx";
 import { useNavigate } from "react-router-dom";
 import {USER_DOES_NOT_FOUND} from "../../constants/constant.ts";
 
 
 
-function Dashboard() {
+function UserList({user}: {user: string}) {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState("Loading...");
     const [users, setUsers] = useState<userTypes[]>([]);
@@ -30,15 +30,14 @@ function Dashboard() {
             return;
         }
     getUsers();
-    }, [isLogged, offset, filter, orderBy, search]);
+    }, [isLogged, offset, filter, orderBy, search, user]);
 
-    console.log(orderBy);
     const getUsers = async () => {
         setLoading("Loading...");
         console.log(searchBy);
         try {
             console.log(limit, offset);
-        const response = await getUser(search, searchBy,limit, offset, orderBy, filter);
+        const response = await getUser(search, searchBy,limit, offset, orderBy, filter,user);
         console.log(response);
             if (response.data.length ===0) {
                 setError(USER_DOES_NOT_FOUND);
@@ -72,7 +71,7 @@ function Dashboard() {
     }
     return (
         <div>
-                <div className="dashboard">
+                <div className="user-list">
                 <div className="list-filter">
                 <input type="text" placeholder={searchBy} value={search}
                     onChange={(e) => setSearch(e.target.value)} />
@@ -92,7 +91,7 @@ function Dashboard() {
             </div>
                 </div>
             {error ? (
-                <p data-testid="error">{error}</p>
+                <p data-testid="error" className="errorMessage">{error}</p>
             ) : (
                 <>
                 {loading ? (<p>{loading}</p>): (
@@ -102,7 +101,7 @@ function Dashboard() {
 
                                 <tbody>
                                     {(users.map((u) => (
-                                        <Userlist user={u} key={u.id} />
+                                        <Userlist user={u} key={u.id} userType={user} />
                                     )))
                                     }
                                 </tbody>
@@ -118,4 +117,4 @@ function Dashboard() {
     );
 }
 
-export default Dashboard;
+export default UserList;

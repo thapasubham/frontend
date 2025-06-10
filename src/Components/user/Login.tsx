@@ -12,8 +12,10 @@ function Login() {
         password: ""
     })
     const navigate = useNavigate();
-    const { setIsLogged } = useAuth();
-
+    const [showPassword, setShowPassword] = useState(false);
+    const { setIsLogged, setUserStatus} = useAuth();
+    const [userType, setUserType] = useState("users")
+    const [error, setError] = useState("");
     function userInput(e: React.ChangeEvent<HTMLInputElement>) {
         const { name, value } = e.target
         setUser((user) => ({ ...user, [name]: value }))
@@ -22,25 +24,30 @@ function Login() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const data = await loginUser(user);
+            const data = await loginUser(user, userType);
 
             if (data.status === 200) {
                 setIsLogged(true);
+                const {refreshToken, bearerToken} = data.message;
                 localStorage.setItem("isLogged", "true");
+                localStorage.setItem("userStatus", userType);
+                localStorage.setItem("refreshToken", refreshToken);
+                document.cookie = "bearerToken=" + bearerToken+"; path=/";
                 alert(LOGGED_IN_SUCCESS);
+                setError("");
                 navigate("/");
             }
             else {
-                alert(data.message);
+                setError(data.message);
             }
         } catch (error) {
 
             if (isAxiosError(error) && error.response) {
-                const status = error.status;
-                // @ts-ignore
+                // @ts-expect-error
                 const message = (error as AxiosError).response.data.message;
-                alert(`${status} ${message}`);
+               setError(message);
             }
+            setError((error as Error).message);
         }
 
     }
@@ -48,11 +55,38 @@ function Login() {
         <>
             <div className="user-form">
                 <h3>Login</h3>
+                {error &&
+                    (
+                        <p className="errorMessage">{error}</p>
+                    )
+                }
                 <form onSubmit={handleSubmit}>
                     <label htmlFor="email">Email</label>
                     <input data-testid="email" type="email" name="email" value={user.email} onChange={userInput} required />
                     <label htmlFor="password">Password</label>
-                    <input data-testid="password" type="password" name="password" value={user.password} onChange={userInput} required />
+                    <input data-testid="password" type={showPassword?"text": "password"} name="password" value={user.password} onChange={userInput} required />
+                    <div className="show-password">
+                        <input
+                            data-testid="showPassword"
+                            type="checkbox"
+                            checked={showPassword}
+                            onChange={() => setShowPassword(!showPassword)}
+                        />
+                        <label htmlFor="showPassword">Show Password</label>
+                    </div>
+                    <div className="userType">
+                        <input
+                            data-testid="showPassword"
+                            type="checkbox"
+                            checked={userType === "mentors"}
+                            onChange={(e) => {
+                                const isAdmin = e.target.checked;
+                                setUserType(isAdmin ? "mentors" : "users");
+                            }}
+                        />
+                        <label htmlFor="showPassword">Login as Admin</label>
+                    </div>
+
                     <button>Submit</button>
                 </form>
             </div>

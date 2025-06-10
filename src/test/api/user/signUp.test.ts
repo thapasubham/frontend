@@ -4,7 +4,7 @@ import axios from "axios";
 
 jest.mock("axios");
 
-jest.mock("../../../api/apiURL", () => ({
+jest.mock("../../../api/apiHelpers.ts", () => ({
   config: {
     apiUrl: "http://localhost:mock",
   },

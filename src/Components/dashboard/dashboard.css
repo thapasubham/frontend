@@ -1,63 +1,11 @@
-.user-table {
-    margin-top: 10px;
+.dashboard{
+    background-color:#000;
     width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-    background: #4b4a4a;
-    border-radius: 10px;
-    
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
-
-.user-table thead {
-    font-weight: bold;
-    cursor: pointer;
-}
-.user-table p{
-    text-align: center;
-    color: hsl(185, 88%, 50%);
-}
-.user-table th:hover {
-
-}
-.list-filter input {
-    margin: 10px;
-    padding: 10px;
-    border-radius: 5px;
-    border: none;
-    background-color: #333;
-    color: white;
-}
-.list-filter input:focus {
-
-    outline: solid 1px hsl(185, 88%, 50%);
-}
-.list-filter select {
-    padding: 10px;
-}
-
-.pagination button {
-    margin: 10px;
-    width: 20%;
-    display: inline;
-    background: #1f1f1f;
-}
-
-.pagination button:hover {
-    border: 1px solid #0858ee;
-    background: #494848
-}
-
-
-.actions button:hover {
-    border: 1px solid #00ffe9;
-}
-.delete-button {
-    border-radius: 10px;
-    background: #ff0000;
-    margin: 5px;
-}
-.edit-button {border-radius: 10px;
-    background: #007bff;
-    margin: 5px;
+.dashboard button {
+    padding: 8px;
+    margin: 8px;
+    background-color: #000000;
 }

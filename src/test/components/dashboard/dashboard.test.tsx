@@ -1,6 +1,6 @@
 import { screen, render, waitFor, fireEvent } from "@testing-library/react";
 import getUser from "../../../api/user/getUser";
-import Dashboard from "../../../Components/dashboard/dashboard.tsx";
+import UserList from "../../../Components/dashboard/userList.tsx";
 import { userTypes } from "../../../types/user.ts";
 import { useAuth } from "../../../auth/AuthContext.tsx";
 import {SOMETHING_WENT_WRONG} from "../../../constants/constant.ts";
@@ -13,7 +13,7 @@ jest.mock("../../../auth/AuthContext", () => ({
 jest.mock("react-router-dom", () => ({
     useNavigate: () => mockedUsedNavigate,
 }));
-jest.mock("../../../api/apiURL", () => ({
+jest.mock("../../../api/apiHelpers.ts", () => ({
     config: {
         apiUrl: "http://localhost:mock",
     },
@@ -28,14 +28,14 @@ describe("Dashboard Test", () => {
         (useAuth as jest.Mock).mockResolvedValue({ isLogged: false });
         (getUser as jest.Mock).mockReturnValue([])
 
-        render(<Dashboard />);
+        render(<UserList />);
         expect(mockedUsedNavigate).toHaveBeenCalledWith("/login");
 
     });
     it("Empty users", async () => {
         (useAuth as jest.Mock).mockReturnValue({ isLogged: true });
         (getUser as jest.Mock).mockResolvedValue({status: 404, message: "No User Found"});
-        render(<Dashboard />);
+        render(<UserList />);
         await waitFor(() => {
             const result = screen.getByTestId("error")
 
@@ -46,7 +46,7 @@ describe("Dashboard Test", () => {
     it("Error When fetching the data", async () => {
         (useAuth as jest.Mock).mockReturnValue({ isLogged: true });
         (getUser as jest.Mock).mockRejectedValue(new Error(SOMETHING_WENT_WRONG));
-        render(<Dashboard />);
+        render(<UserList />);
         await waitFor(() => {
             const result = screen.getByTestId("error") as HTMLElement;
 
@@ -72,7 +72,7 @@ describe("Dashboard Test", () => {
         (getUser as jest.Mock).mockResolvedValue({status: 200, data: users});
 
 
-        render(<Dashboard />);
+        render(<UserList />);
 
 
         const prevButton = await screen.findByTestId("previous-button") as HTMLButtonElement;

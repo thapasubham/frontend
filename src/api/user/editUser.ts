@@ -1,19 +1,24 @@
 import { userTypes } from "../../types/user.ts";
-import { config } from "../apiURL.ts";
-import axios from "axios";
+import {bearerToken, config} from "../apiHelpers.ts";
+import axios, {AxiosError} from "axios";
 
 const {apiUrl} = config;
-export async function editUser(user: userTypes) {
+export async function editUser(payload: userTypes, user:string) {
   try {
     //perform api request here
-   const url = `${apiUrl}/user/${user.id}`;
+   const url = `${apiUrl}/${user}/${payload.id}`;
 
-   const result =  await  axios.put(url, user);
+   const result =  await  axios.put(url, payload, {
+       headers: {
+        Authorization: `Bearer ${bearerToken}`,
+       }
+   });
     //just return the response
   console.log(result);
     return { status: result.status, message: result.data.message };
   } catch (err) {
-    return { status: 500, message: err.response.data.message };
+      const {status ,message, response} = err as AxiosError;
+    return { status: status , message: response?response.data :message };
 
   }
 }
