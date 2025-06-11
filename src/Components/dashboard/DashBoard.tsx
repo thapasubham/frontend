@@ -1,28 +1,35 @@
 import UserList from "./userList.tsx";
 import {useState} from "react";
 import './dashboard.css'
-function DashBoard(){
-    const [user, setuser] = useState("users")
 
-    const mentor = ()=>{
-        setuser("mentors")
-    }
-const users = ()=>{
-        setuser("users")
-}
-return(
-    <>
+import {useAuth} from "../../auth/AuthContext.tsx";
+
+
+
+function DashBoard() {
+    const [user, setUser] = useState("users");
+    const {  permission } = useAuth();
+
+    const showAdminOptions = permission.includes("admin:view");
+    const canCreate = permission.includes("admin:add");
+
+    return (
         <div>
-    <div className="dashboard">
-        <button onClick={users}>User List</button>
+            <div className="dashboard">
+                <button onClick={() => setUser("users")}>User List</button>
 
-        <button onClick={mentor}>Admin List</button>
+                {showAdminOptions && (
+                    <>
+                        <button onClick={() => setUser("mentors")}>Admin List</button>
+                        <button onClick={() => setUser("users")}>Unverified User</button>
+                        {canCreate && <a className="links" href="/create">Create User</a>}
+                    </>
+                )}
+            </div>
 
-
-
-    </div>
-        <UserList user={user}/>
-    </div> </>
-)
+            <UserList user={user} />
+        </div>
+    );
 }
+
 export default DashBoard;

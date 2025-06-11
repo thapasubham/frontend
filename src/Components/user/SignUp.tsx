@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import signUp from "../../api/user/signUp.ts";
+import {useNavigate} from "react-router-dom";
+import {userErrorType} from "../../validation/userFormError.ts";
+import validateCreate from "../../validation/validateCreate.ts";
 
 export function SignUp() {
     const [form, setForm] = useState({
-        id: 0,
         firstname: "",
         lastname: "",
         email: "",
@@ -11,31 +13,43 @@ export function SignUp() {
         password: "",
         confirmPassword: ""
     });
-
+    const navigate = useNavigate();
+    const [error, setError] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+    const [formError, setFormError] = useState<userErrorType>({
+        firstname: "",
+        lastname: "",
+        email: "",
+        phoneNumber: "",
+    });
+
 
     async function register(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
-        if (form.confirmPassword !== form.password) {
-            alert("Passwords do not match");
+        const validationErrors = validateCreate(form);
+        setFormError({...formError, ...validationErrors});
+
+        console.log("error", formError);
+        const hasErrors = Object.values(formError).some((msg) => msg !== "");
+        if (hasErrors) {
             return;
         }
 
         try {
-            const result = await signUp(form);
+            const result = await signUp(form, "users");
 
 
             if (result.status === 201) {
-                alert(result.message); // Should be a string
-                // Optionally redirect or reset form here
-            } else {
-                alert(result.message); // Handle error messages from backend
+                alert(result.message);
+                navigate("/login");
+            } else if(result.status === 409 ||result.status === 400){
+                setFormError({...formError,...result.message});
             }
 
         } catch (err) {
-            console.error("Registration error:", err);
-            alert((err as Error).message);
+            setError(err.message);
+
         }
     }
 
@@ -48,6 +62,7 @@ export function SignUp() {
     return (
         <div className="user-form">
             <h3>Sign Up</h3>
+            {error&& (<p className="errorMessage">{error}</p>)}
             <form onSubmit={register}>
                 <label htmlFor="firstname">Firstname</label>
                 <input
@@ -58,7 +73,7 @@ export function SignUp() {
                     onChange={handleChange}
                     required
                 />
-
+                {formError.firstname && (<span className="formError">{formError.firstname}</span>)}
                 <label htmlFor="lastname">Lastname</label>
                 <input
                     data-testid="lastname"
@@ -69,6 +84,7 @@ export function SignUp() {
                     required
                 />
 
+                {formError.lastname && (<span className="formError">{formError.lastname}</span>)}
                 <label htmlFor="email">Email</label>
                 <input
                     data-testid="email"
@@ -79,6 +95,7 @@ export function SignUp() {
                     required
                 />
 
+                {formError.email && (<span className="formError">{formError.email}</span>)}
                 <label htmlFor="phoneNumber">Phone no</label>
                 <input
                     data-testid="phoneNumber"
@@ -88,7 +105,7 @@ export function SignUp() {
                     onChange={handleChange}
                     required
                 />
-
+                {formError.phoneNumber&& (<span className="formError">{formError.phoneNumber}</span>)}
                 <label htmlFor="password">Password</label>
                 <input
                     data-testid="password"
@@ -108,7 +125,7 @@ export function SignUp() {
                     onChange={handleChange}
                     required
                 />
-
+                {formError.password&& (<span className="formError">{formError.password}</span>)}
                 <div className="show-password">
                     <input
                         data-testid="showPassword"
@@ -119,7 +136,10 @@ export function SignUp() {
                     <label htmlFor="showPassword">Show Password</label>
                 </div>
 
-                <button data-testid="submitButton" type="submit">Submit</button>
+                <div>
+
+                </div>
+                <button data-testid="submitButton">Submit</button>
             </form>
         </div>
     );

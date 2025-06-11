@@ -4,11 +4,14 @@ import {useNavigate, useParams } from "react-router-dom";
 import { getUserByid } from "../../api/user/getUserByid.ts";
 import {Refresh} from "../../api/refresh/refresh.ts";
 import {useAuth} from "../../auth/AuthContext.tsx";
+import {userErrorType} from "../../validation/userFormError.types.ts";
+import validateCreate from "../../validation/validateCreate.ts";
+import {hasNoSelection} from "@testing-library/user-event/dist/cjs/utils.js";
 
 function EditUser() {
     const { id, userType } = useParams();
   const {isLoggedIn, userStatus} = useAuth()
-    const retry = useRef<boolean>(false);
+    const [retry,setRetry]= useState(0)
     const [form, setform] = useState(
         {
             id: Number(id),
@@ -17,19 +20,44 @@ function EditUser() {
             phoneNumber: "",
             email: "",
         });
+  const maxRetry = 1;
     const [error, setError] = useState("");
-    const [formError, setFormError] = useState({
+    const [formError, setFormError] = useState<userErrorType>({
         firstname: "",
         lastname: "",
         email: "",
         phoneNumber: "",
     });
     const navigate = useNavigate();
-    
+
+    const refresh =async (response) =>{
+        setRetry(rerty+1);
+        if(response.status === 401 && retry<maxRetry ) {
+
+            const result = await  Refresh(userStatus);
+            if (result) {
+                setRetry(0);
+                console.log(result);
+                setError("");
+                return true;
+            } else  {
+                navigate("/login");
+            }
+        }
+        else
+        {
+            console.log(response)
+            const {message} = response;
+
+            setError(message);
+        }
+return false;
+    }
     const fetchUser = async () => {
         console.log("Fetching user", userType);
         try {
             const response = await getUserByid(form.id, userType as string);
+
 
 
             if (response.status === 200) {
@@ -39,21 +67,9 @@ function EditUser() {
                 setError("");
 
             }
-            if(response.status ===401) {
-                 const result = await  Refresh(userStatus);
-                 if (result) {
-                     retry.current = true;
-                 } else {
-                     navigate("/login");
-                 }
-            }
-            else
-            {
-                console.log(response);
-                const message = response.message as string;
 
-               setError(message);
-            }
+            await refresh(response);
+
         } catch (e) {
             console.error(e);
             setError(()=>(e as Error).message);
@@ -64,51 +80,17 @@ function EditUser() {
     useEffect(() => {
         fetchUser();
 
-    }, [retry]);
-
-    const validate =() =>{
-        const error: typeof formError = {
-            firstname: "",
-            lastname: "",
-            email: "",
-            phoneNumber: ""
-        }
-        if(!form.firstname.trim()){
-            error.firstname = "First name is required";
-        }else{
-            error.firstname = "";
-        }
-
-        if(!form.lastname.trim()){
-            error.lastname="Last name is required";
-        } else{
-            error.lastname = "";
-        }
-        if(!form.email.trim()){
-            error.email = "Email is required";
-        } else {
-            error.email = "";
-        }
-        if(!form.phoneNumber.trim()){
-            error.phoneNumber= "Phone number is required";
-        }else if(isNaN(Number(form.phoneNumber.trim()))){
-            error.phoneNumber = "Phone number is invalid";
-        }else if(form.phoneNumber.length!==10){
-            error.phoneNumber = "Phone number should be 10 digits";
-        } else  {
-            error.phoneNumber = "";
-        }
-        return error;
-    }
+    }, []);
 
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+            setRetry(0);
+                 setError("");
 
-        const errors = validate();
+        const errors = validateCreate(form);
         setFormError({...formError, ...errors});
-        const hasErrors = Object.values(formError).some((msg) => msg !== "");
-        console.log(hasErrors);
+        const hasErrors = Object.values(errors).some((msg) => msg !== "");
         if(hasErrors) {
 
             return;
@@ -123,9 +105,9 @@ function EditUser() {
         } else  if(result.status===409){
             setFormError({...formError, ...result.message});
          }
-            else   {
-                setError(result.message.message);
-        }
+
+         await refresh(result);
+
     }
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;

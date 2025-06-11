@@ -1,9 +1,9 @@
-import axios from "axios";
+import axios, {AxiosError, AxiosResponse} from "axios";
 import { userTypes } from "../../types/user.ts";
-import { config } from "../apiURL.ts";
+import { config } from "../apiHelpers.ts";
 
 const { apiUrl } = config;
-async function signUp(user: userTypes) {
+async function signUp(user: userTypes, users: string) {
 const payload: userTypes = {
   id: 0,
   firstname: user.firstname,
@@ -15,15 +15,15 @@ const payload: userTypes = {
 console.log(payload);
   try {
     //perform api request here
-    const url = `${apiUrl}/user`;
+    const url = `${apiUrl}/${users||"users"}`;
 
     const result =  await  axios.post(url, payload);
-    //just return the response
-    console.log(result);
-    return { status: result.status, message: result.data.message };
-  } catch (err) {
-    return { status: 500, message: err.response.data.message };
+    return { status: result.status, message: result };
 
+  } catch (err) {
+    const {status, response, message} = err as AxiosError;
+
+    return { status: status , message: response ? (response as AxiosResponse).data : message };
   }
 }
 

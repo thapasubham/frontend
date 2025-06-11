@@ -1,9 +1,12 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import About from "../Components/about/About";
-import Dashboard from "../Components/dashboard/dashboard.tsx";
 import Home from "../Components/home";
-import { SignUp, Login, Logout, EditUser, DeleteUser } from "../Components/user/index"
+import { SignUp, Login, Logout, EditUser} from "../Components/user/index"
 import PageNotFound from "../Components/PageNotFound.tsx";
+import DashBoard from "../Components/dashboard/DashBoard.tsx";
+import {Profile} from "../Components/user/Profile.tsx";
+import CreateUser from "../Components/user/CreateUser.tsx";
+import {DeleteUser} from "../Components/user";
 export function Router() {
     return (
         <BrowserRouter>
@@ -11,13 +14,15 @@ export function Router() {
                 <Route index Component={Home} />
                 <Route path='/about' Component={About} />
                 <Route path='/login' Component={Login} />
-                <Route path='/dashboard' Component={Dashboard} />
+                <Route path='/dashboard' Component={DashBoard} />
                 <Route path='/logout' Component={Logout} />
-                <Route path='/userlist' Component={Dashboard} />
                 <Route path='/signup' Component={SignUp} />
                 <Route path='*' Component={PageNotFound} />
-                <Route path='/editUser/:id' Component={EditUser} />
-                <Route path='/deleteUser/:id' Component={DeleteUser} />
+                <Route path='/create' Component={CreateUser} />
+                <Route path='/editUser/:id/:userType' Component={EditUser} />
+                <Route path='/delete/:id/:userType' Component={DeleteUser} />
+                <Route path='/profile/:id/:userType' Component={Profile} />
+
             </Routes>
         </BrowserRouter>
     )

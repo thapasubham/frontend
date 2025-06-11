@@ -1,5 +1,6 @@
 import axios from "axios";
 import {config} from "../apiHelpers.ts";
+import {setTokens} from "./setTokens.ts";
 
 const {apiUrl} = config;
 export async function Refresh(userType: string) {
@@ -7,6 +8,7 @@ export async function Refresh(userType: string) {
     try{
         const refresh = localStorage.getItem("refreshToken");
 
+        console.log(refresh);
         const url =`${apiUrl}/${userType}/refreshToken`;
         const result = await axios.post(url,{}, {
         headers: {
@@ -14,11 +16,9 @@ export async function Refresh(userType: string) {
         }
         }
         );
-        const {refreshToken, bearerToken }= result.data;
-         localStorage.setItem("isLogged", "true");
-         localStorage.setItem("refreshToken", refreshToken);
-         document.cookie = "bearerToken=" + bearerToken+"; path=/";
 
+       console.log(result.data);
+        setTokens(result.data, userType);
          return true;
     }
     catch(err) {

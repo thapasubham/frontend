@@ -3,13 +3,13 @@ export const config= {
 };
 
 
-function getCookie(name:string) {
+export function getCookie(name:string) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
+   console.log(value)
     if (parts.length === 2) {
         return parts[1].split(';').shift()
     }
     return null;
 }
 
-export const bearerToken = getCookie("bearerToken") as string;
