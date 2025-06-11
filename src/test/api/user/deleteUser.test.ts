@@ -19,7 +19,6 @@ describe("Delete user api test", () => {
     const id = 5;
     (fetch as jest.Mock).mockResolvedValue({status: 204, message: "User deleted successfully"})
     const result = await deleteUser(id, "users");
-console.log(result);
     expect(result.status).toEqual(204);
 
   });

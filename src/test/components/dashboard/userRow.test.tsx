@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import Userlist from "../../../Components/dashboard/Userlist.tsx";
+import Userlist from "../../../Components/dashboard/UserRow.tsx";
 import { userTypes } from "../../../types/user.ts";
+import AuthProvider from "../../../auth/AuthContext.tsx";
 
 
 describe("User component", () => {
@@ -13,7 +14,7 @@ describe("User component", () => {
     };
 
     it("renders the user's info in table cells", () => {
-        render(<table><tbody><Userlist user={mockUser} /></tbody></table>);
+        render(<AuthProvider><table><tbody><Userlist user={mockUser} userType={""} /></tbody></table></AuthProvider>);
 
         expect(screen.getByText(mockUser.firstname)).toBeInTheDocument();
         expect(screen.getByText(mockUser.lastname)).toBeInTheDocument();

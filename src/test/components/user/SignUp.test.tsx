@@ -3,11 +3,7 @@ import signUp from "../../../api/user/signUp";
 import SignUp from "../../../Components/user/SignUp.tsx";
 
 
-jest.mock("../../../api/apiURL", () => ({
-    config: {
-        apiUrl: "http://localhost:mock",
-    },
-}));
+
 jest.mock("../../../api/user/signUp");
 describe("Sign up", () => {
     beforeEach(() => {
@@ -70,7 +66,7 @@ describe("Sign up", () => {
                 phoneNumber: "9748214526",
                 password: "password123",
                 confirmPassword: "password123"
-            });
+            }, "users");
 
             expect(window.alert).toHaveBeenCalledWith("User Created");
         });

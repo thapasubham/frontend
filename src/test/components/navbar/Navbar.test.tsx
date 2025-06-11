@@ -28,6 +28,6 @@ describe("NavBar component", () => {
         render(<NavBar />);
 
         expect(screen.getByTestId("link_dashboard").textContent).toEqual("Dashboard")
-        expect(screen.getByText("LogOut")).toBeInTheDocument();
+        expect(screen.getByText("Logout")).toBeInTheDocument();
     });
 });

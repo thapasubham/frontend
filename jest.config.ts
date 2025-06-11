@@ -9,6 +9,9 @@ const config: Config = {
   collectCoverage: true,
   collectCoverageFrom: [
     "src/**/*.{ts,tsx}",
+    "!src/**/*.types.{ts,tsx}",
+      "!src/**/constant.{ts,tsx}",
+    "!src/**/refresh.{ts,tsx}",
     "!src/**/*.test.{ts,tsx}",
     "!src/**/types/*.{ts,tsx}",
     "!src/**/superTest.{ts,tsx}",

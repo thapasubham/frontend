@@ -2,13 +2,7 @@ import signUp from "../../../api/user/signUp.ts";
 import { userTypes } from "../../../types/user.ts";
 import axios from "axios";
 
-jest.mock("axios");
 
-jest.mock("../../../api/apiHelpers.ts", () => ({
-  config: {
-    apiUrl: "http://localhost:mock",
-  },
-}));
 describe("Signup api tests", () => {
   const user: userTypes = {
     id: 0,
@@ -24,8 +18,7 @@ describe("Signup api tests", () => {
       message: "User Created not Successfully",
     });
 
-    const result = await signUp(user);
-    console.log(result);
-
+    const result = await signUp(user, "users");
+    expect(result.status).toBe(201);
   });
 });

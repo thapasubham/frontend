@@ -24,7 +24,6 @@ describe("Signup api tests", () => {
         (axios.put as jest.Mock).mockResolvedValue({status:200,data:{message: "User Updated"}});
         user.id=10
         const result =  await editUser(user, "user");
-        console.log(result);
         expect(result.status).toBe(200)
         expect(result.message).toBe("User Updated")
     });

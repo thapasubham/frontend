@@ -1,6 +1,6 @@
 
 import {fireEvent, screen, render, waitFor} from "@testing-library/react";
-import AuthProvider from "../../../auth/AuthContext.tsx";
+
 import Login from "../../../Components/user/Login.tsx";
 import {LOGGED_IN_SUCCESS, USER_DOES_NOT_FOUND} from "../../../constants/constant.ts";
 import loginUser from "../../../api/user/login.ts";
@@ -10,14 +10,12 @@ const mockedUsedNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
     useNavigate: () => mockedUsedNavigate,
 }))
-
-jest.mock("../../../api/apiURL", () => ({
-    config: {
-        apiUrl: "http://localhost:mock",
-    },
-}));
+jest.mock("../../../api/refresh/setTokens.ts", ()=>({
+    setTokens: jest.fn()
+})
+)
 jest.mock("../../../api/user/login.ts")
-const renderComponent = ()=>  render(<AuthProvider><Login /></AuthProvider>);
+const renderComponent = ()=>  render(<Login />);
 describe("login Test", ()=>{
     let email:HTMLInputElement;
     let password:HTMLInputElement;
