@@ -25,7 +25,7 @@ describe("Edit User", () => {
         (useParams as jest.Mock).mockReturnValue({ id: user.id, userType: "users" });
     });
 
-    let user = {
+    const user = {
         id: 5,
         firstname: "John",
         lastname: "BloodBorne",
