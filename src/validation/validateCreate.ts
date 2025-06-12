@@ -1,7 +1,7 @@
-import {userErrorType} from "./userFormError.ts";
-import {userTypes} from "../types/user.ts";
+import {userErrorType} from "./userFormError.types.ts";
+import {userCreate} from "../types/user.ts";
 
-export default function validateCreate(user: userTypes) {
+export default function validateCreate(user: userCreate) {
 const  error: userErrorType = {
     firstname: "",
     lastname: "",

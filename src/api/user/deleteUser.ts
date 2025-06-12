@@ -1,14 +1,20 @@
-import {FAILED_TO_DELETE_USER, USER_DELETED} from "../../constants/constant";
+import {config, getCookie} from "../apiHelpers.ts";
 
-export async function deleteUser(id: number) {
+const {apiUrl} = config;
+export async function deleteUser(id: number, userType: string) {
   try {
     //call the api here
+    const url = `${apiUrl}/${userType}/${id}`;
+    const bearerToken = getCookie("bearerToken") as string;
 
-    if (id === -1) {
-      return { status: 404, message: FAILED_TO_DELETE_USER };
-    }
+    const result = await  fetch(url, {
+      method: "DELETE",
+      headers: {
+        authorization: `Bearer ${bearerToken}`,
+      }
+    })
 
-    return { status: 200, message: USER_DELETED };
+    return {status: result.status, data: result};
   } catch (e) {
     return { status: 500, message: (e as Error).message };
   }

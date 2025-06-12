@@ -4,6 +4,7 @@ interface token {
        bearerToken: string;
    },
     permissions: []
+    id: number
 }
 export function setTokens(data: token, userType: string) {
 
@@ -14,7 +15,7 @@ export function setTokens(data: token, userType: string) {
     localStorage.setItem("userStatus", userType);
     localStorage.setItem("refreshToken", refreshToken);
     localStorage.setItem("permission", JSON.stringify(permissions));
-
+    localStorage.setItem("userID", data.id.toString());
     document.cookie = "bearerToken=" + bearerToken + "; path=/";
 
 }

@@ -1,6 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+/*@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');*/
 #root {
-  font-family: 'Montserrat', sans-serif;
+  /*font-family: 'Montserrat', sans-serif;*/
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
@@ -43,4 +43,13 @@ button:hover {
 
 .read-the-docs {
   color: #888;
+}
+
+.errorMessage {
+  color: #ff1717;
+}
+
+.formError {
+  color: #ff1717;
+  text-align: left;
 }

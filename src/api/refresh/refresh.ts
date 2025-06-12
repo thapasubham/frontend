@@ -8,7 +8,7 @@ export async function Refresh(userType: string) {
     try{
         const refresh = localStorage.getItem("refreshToken");
 
-        console.log(refresh);
+
         const url =`${apiUrl}/${userType}/refreshToken`;
         const result = await axios.post(url,{}, {
         headers: {

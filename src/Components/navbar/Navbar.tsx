@@ -1,13 +1,11 @@
 import './navbar.css';
-import Logout from "../user/Logout.tsx";
 import { useAuth } from "../../auth/AuthContext.tsx";
 
 
 
 function NavBar() {
 
-    const { isLogged } = useAuth();
-    console.log(isLogged);
+    const { isLogged, userID, userStatus} = useAuth();
     return (
         <>
             <nav className="navbar">
@@ -20,7 +18,8 @@ function NavBar() {
                         (
                             <>
                                 <li data-testid='link_dashboard'><a href="/dashboard">Dashboard</a></li>
-                                <Logout/>
+                                <li><a href={`/profile/${userID}/${userStatus}`}>Profile</a></li>
+                                <li data-testid='link_profile' className="logout"> <a href="/Logout">Logout</a></li>
 
                             </>
                         )

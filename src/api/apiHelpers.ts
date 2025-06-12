@@ -6,7 +6,7 @@ export const config= {
 export function getCookie(name:string) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
-   console.log(value)
+  console.log(parts);
     if (parts.length === 2) {
         return parts[1].split(';').shift()
     }
