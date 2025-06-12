@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import TableHeader from "./TableHeader.tsx";
 import getUser from "../../api/user/getUser.ts";
 import Userlist from "./UserRow.tsx";
-import { userTypes } from "../../types/user.ts";
+import {UserFetch} from "../../types/user.ts";
 import "./userList.css"
 import { useAuth } from "../../auth/AuthContext.tsx";
 import { useNavigate } from "react-router-dom";
@@ -10,10 +10,10 @@ import {USER_DOES_NOT_FOUND} from "../../constants/constant.ts";
 
 
 
-function UserList({user}: {user: string}) {
+function UserList({user, verified}: {user: string, verified: boolean}) {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState("Loading...");
-    const [users, setUsers] = useState<userTypes[]>([]);
+    const [users, setUsers] = useState<UserFetch[]>([]);
     const { isLogged } = useAuth();
     const navigate = useNavigate();
     const limit =5;
@@ -21,7 +21,7 @@ function UserList({user}: {user: string}) {
     const [search, setSearch] = useState("");
     const [filter, setFilter] = useState("");
     const [orderBy, setOrderBy] = useState("");
-    const [searchBy, setSearchBy] = useState("");
+    const [searchBy, setSearchBy] = useState("firstname");
 
     useEffect(() => {
         if (!isLogged) {
@@ -30,15 +30,15 @@ function UserList({user}: {user: string}) {
             return;
         }
     getUsers();
-    }, [isLogged, offset, filter, orderBy, search, user]);
+    }, [isLogged, offset, filter, orderBy, search, user,verified]);
 
     const getUsers = async () => {
         setLoading("Loading...");
-        console.log(searchBy);
+        
         try {
-            console.log(limit, offset);
-        const response = await getUser(search, searchBy,limit, offset, orderBy, filter,user);
-        console.log(response);
+
+        const response = await getUser(search, searchBy,limit, offset, orderBy, filter,user, verified);
+
             if (response.data.length ===0) {
                 setError(USER_DOES_NOT_FOUND);
                 return;
@@ -101,7 +101,7 @@ function UserList({user}: {user: string}) {
 
                                 <tbody>
                                     {(users.map((u) => (
-                                        <Userlist user={u} key={u.id} userType={user} />
+                                        <Userlist userData={u} key={u.id} userType={user} />
                                     )))
                                     }
                                 </tbody>

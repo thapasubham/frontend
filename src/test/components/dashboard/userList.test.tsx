@@ -1,7 +1,7 @@
 import { screen, render, waitFor, fireEvent } from "@testing-library/react";
 import getUser from "../../../api/user/getUser";
 import UserList from "../../../Components/dashboard/userList.tsx";
-import { userTypes } from "../../../types/user.ts";
+import { userCreate } from "../../../types/user.ts";
 import { useAuth } from "../../../auth/AuthContext.tsx";
 import {SOMETHING_WENT_WRONG} from "../../../constants/constant.ts";
 import {UserType} from "../../../types/userType.ts";
@@ -58,7 +58,7 @@ describe("Dashboard Test", () => {
     it("Renders users", async () => {
         (useAuth as jest.Mock).mockReturnValue({ isLogged: true });
 
-        const users: userTypes[] = [
+        const users: userCreate[] = [
             {
                 id: 5,
                 firstname: "Subham",

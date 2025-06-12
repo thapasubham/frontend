@@ -86,3 +86,7 @@
     background: #007bff;
     margin: 5px;
 }
+
+.verify-button {
+    border-radius: 10px;
+background: #00cc00;}

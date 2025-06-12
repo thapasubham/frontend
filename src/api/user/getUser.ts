@@ -1,20 +1,23 @@
-import { config } from "../apiURL.ts";
+import { config } from "../apiHelpers.ts";
 
 const { apiUrl } = config;
-async function getUser(search: string, searchBy: string,limit: number, offset: number, orderby: string, filter: string) {
+async function getUser(search: string, searchBy: string,limit: number, offset: number, orderby: string, filter: string, user: string,
+isVerified: boolean
+                       ) {
   //make api call here
   const url =`${apiUrl}/graphql`;
-  const filterColumn = filter?filter:"firstname"
+  const filterColumn = filter||"firstname"
 
   console.log("filterColumn: ", filterColumn);
   const query = `
-  query user($search: String, $searchBy: String, $filter: String, $limit: Int!, $offset: Int!, $orderBy: String) {
-    users(search: $search, searchBy: $searchBy, filter: $filter, limit: $limit, offset: $offset, orderBy: $orderBy) {
+  query user($search: String, $searchBy: String, $filter: String, $limit: Int!, $offset: Int!, $orderBy: String, $verified: Boolean) {
+    ${user}(search: $search, searchBy: $searchBy, filter: $filter, limit: $limit, offset: $offset, orderBy: $orderBy, isVerified: $verified) {
       id
       firstname
       lastname
       email
       phoneNumber
+      isverified
     }
   }
 `;
@@ -26,8 +29,9 @@ async function getUser(search: string, searchBy: string,limit: number, offset: n
     limit,
     offset,
     orderBy: orderby,
+    verified: isVerified,
   };
-
+console.log(variables);
   const result = await fetch(url, {
     method: "POST",
     headers: {
@@ -36,11 +40,10 @@ async function getUser(search: string, searchBy: string,limit: number, offset: n
     body: JSON.stringify({ query, variables }),
   });
 
-
-  console.log(limit, offset);
 const {data }= await result.json();
-console.log(data)
-  return { status: result.status, data:data.users };
+
+
+  return { status: result.status, data: data?.[user]};
 }
 
 export default getUser;

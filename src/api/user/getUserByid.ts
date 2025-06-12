@@ -1,21 +1,27 @@
-import { USER_DOES_NOT_FOUND } from "../../constants/constant.ts";
-import {config} from "../apiURL.ts";
+import {config, getCookie} from "../apiHelpers.ts";
 
 
 const {apiUrl}= config;
-export async function getUserByid(id: number) {
+export async function getUserByid(id: number, userType: string) {
   try {
     //make api call here
-    const url =  `${apiUrl}/user/${id}`;
-    console.log(url);
+    const url =  `${apiUrl}/${userType}/${id}`;
+    const bearerToken = getCookie("bearerToken") as string;
     const result = await fetch(url, {
       method: "GET",
+      headers: {
+        authorization: `Bearer ${bearerToken}`,
+
+      },
+     credentials: "include"
     });
     const data = await result.json();
 
-    return {status: result.status, data};
+    return {status: result.status, data: data};
 
   } catch (e) {
-    return { status: 404, message: USER_DOES_NOT_FOUND };
+    return { status: 404, message: (e as Error).message };
   }
 }
+
+
