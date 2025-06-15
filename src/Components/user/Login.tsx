@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import "./form.css"
 import loginUser from "../../api/user/login.ts";
-import { useAuth } from "../../auth/AuthContext.tsx";
 import { useNavigate } from "react-router-dom";
 import { AxiosError, isAxiosError } from "axios";
 import { LOGGED_IN_SUCCESS } from "../../constants/constant.ts";
+import {setTokens} from "../../api/refresh/setTokens.ts";
 
 function Login() {
     const [user, setUser] = useState({
@@ -13,7 +13,6 @@ function Login() {
     })
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
-    const { setIsLogged, setUserStatus} = useAuth();
     const [userType, setUserType] = useState("users")
     const [error, setError] = useState("");
     function userInput(e: React.ChangeEvent<HTMLInputElement>) {
@@ -27,16 +26,15 @@ function Login() {
             const data = await loginUser(user, userType);
 
             if (data.status === 200) {
-                setIsLogged(true);
-                const {refreshToken, bearerToken} = data.message;
-                localStorage.setItem("isLogged", "true");
-                localStorage.setItem("userStatus", userType);
-                localStorage.setItem("refreshToken", refreshToken);
-                document.cookie = "bearerToken=" + bearerToken+"; path=/";
+
+               setTokens(data.message, userType);
                 alert(LOGGED_IN_SUCCESS);
+
                 setError("");
+
                 navigate("/");
             }
+
             else {
                 setError(data.message);
             }
@@ -84,7 +82,7 @@ function Login() {
                                 setUserType(isAdmin ? "mentors" : "users");
                             }}
                         />
-                        <label htmlFor="showPassword">Login as Admin</label>
+                        <label >Login as Admin</label>
                     </div>
 
                     <button>Submit</button>

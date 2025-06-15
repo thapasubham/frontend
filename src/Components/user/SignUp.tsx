@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import signUp from "../../api/user/signUp.ts";
 import {useNavigate} from "react-router-dom";
-import {userErrorType} from "../../validation/userFormError.ts";
-import validateCreate from "../../validation/validateCreate.ts";
+import {userErrorType} from "../../validation/userFormError.types.ts";
+import {validateCreate, sanitizeInput} from "../../validation/validateCreate.ts";
 
 export function SignUp() {
     const [form, setForm] = useState({
@@ -26,18 +26,19 @@ export function SignUp() {
 
     async function register(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-
-        const validationErrors = validateCreate(form);
+        const payload = sanitizeInput(form)
+        const validationErrors = validateCreate(payload);
         setFormError({...formError, ...validationErrors});
 
-        console.log("error", formError);
-        const hasErrors = Object.values(formError).some((msg) => msg !== "");
+
+        const hasErrors = Object.values(validationErrors).some((msg) => msg !== "");
         if (hasErrors) {
+
             return;
         }
 
         try {
-            const result = await signUp(form, "users");
+            const result = await signUp(payload, "users");
 
 
             if (result.status === 201) {
@@ -48,7 +49,7 @@ export function SignUp() {
             }
 
         } catch (err) {
-            setError(err.message);
+            setError((err as Error).message);
 
         }
     }

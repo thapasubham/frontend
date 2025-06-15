@@ -1,9 +1,11 @@
-export interface userCreate {
+export interface userPayload {
   id?: number;
   firstname: string;
   lastname: string;
   email: string;
   phoneNumber: string;
+  role?: number
+  isverified?: boolean;
   password?: string;
   confirmPassword?: string;
 }

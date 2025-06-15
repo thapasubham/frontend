@@ -1,6 +1,6 @@
-import { userTypes } from "./user";
+import { userPayload } from "./user";
 
-export const userData: userTypes[] = [
+export const userData: userPayload[] = [
   {
     id: 5,
     firstname: "Subham",

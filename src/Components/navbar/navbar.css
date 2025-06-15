@@ -1,18 +1,21 @@
 .navbar {
     background-color: #333;
-    border-radius: 10px;
     padding: 1rem;
     color: white;
     width: 500px;
     margin: auto;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
 .nav-links {
     list-style-type: none;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     padding: 0;
     margin: 0;
+
 }
 .logout{
     border-radius: 8px;
@@ -32,6 +35,7 @@
 .nav-links li {
     padding: 10px;
     margin: 0 15px;
+
 }
 
 .nav-links   a {

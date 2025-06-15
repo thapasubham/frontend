@@ -23,18 +23,21 @@ function UserList({user, verified}: {user: string, verified: boolean}) {
     const [orderBy, setOrderBy] = useState("");
     const [searchBy, setSearchBy] = useState("firstname");
 
+
+
     useEffect(() => {
         if (!isLogged) {
             setError("You need to login");
             navigate("/login");
             return;
         }
-    getUsers();
-    }, [isLogged, offset, filter, orderBy, search, user,verified]);
 
-    const getUsers = async () => {
-        setLoading("Loading...");
-        
+       const getData= setTimeout( ()=>getUsers(), 200);
+        return () => {clearTimeout(getData);};
+        }, [isLogged, offset, filter, orderBy, search, user,verified]);
+
+        const getUsers = async () => {
+
         try {
 
         const response = await getUser(search, searchBy,limit, offset, orderBy, filter,user, verified);

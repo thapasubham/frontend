@@ -4,7 +4,7 @@ import { Role } from "../../types/Role.ts";
 import { getRoles } from "../../api/role/getRole.ts"; // make sure you have this
 import  "./form.css"
 import {userErrorType} from "../../validation/userFormError.types.ts";
-import validateCreate from "../../validation/validateCreate.ts";
+import {validateCreate ,sanitizeInput} from "../../validation/validateCreate.ts";
 import signUp from "../../api/user/signUp.ts";
 import {Refresh} from "../../api/refresh/refresh.ts";
 import {useAuth} from "../../auth/AuthContext.tsx";
@@ -17,6 +17,7 @@ function CreateUser() {
         email: "",
         phoneNumber: "",
         role: 1,
+        isverified: true,
     });
     const [formError, setFormErrors] = useState<userErrorType>({
         firstname: "",
@@ -54,10 +55,11 @@ function CreateUser() {
         fetchRoles();
     }, []);
 
-    function handleChange(e : React.ChangeEvent<HTMLInputElement>) {
+    function handleChange(e) {
             const { name, value } = e.target;
 
             setForm({ ...form, [name]:  name === "role" ? Number(value) : value  });
+        console.log(form);
     }
 
     const refresh =async () =>{
@@ -76,21 +78,28 @@ function CreateUser() {
 
     const handleRegister=async (e: React.FormEvent<HTMLFormElement>) =>{
         e.preventDefault();
+        const payload = sanitizeInput(form);
         const errors = validateCreate(form);
-        const hasError = Object.values(errors).some((msg: string)=>msg!="")
-        if(hasError){
+        setFormErrors(errors);
+        const hasErrors = Object.values(errors).some((msg) => msg !== "");
+        if(hasErrors){
            setFormErrors(errors);
             return;
         }
 
         try {
-            const result = await signUp(form, user);
 
+            payload.isverified = true;
+            const result = await signUp(payload, user);
+            console.log(result);
+            setError("");
             if(result.status===201){
+                console.log(result);
                 alert(result.message)
+
             }
-            if(result.status===409){
-                setFormErrors(result.message)
+            if(result.status===400 || result.status===409){
+                setFormErrors({...formError,...result.message});
             }
 
             if(result.status===401&& retry<maxRetry){
@@ -98,6 +107,7 @@ function CreateUser() {
             }
 
         }catch(e){
+            console.log(e)
             setError((e as Error).message);
         }
     }
@@ -132,7 +142,7 @@ function CreateUser() {
             <label htmlFor="email">Email</label>
             <input
                 data-testid="email"
-                type="email"
+                type="text"
                 name="email"
                 value={form.email}
                 onChange={handleChange}
@@ -150,6 +160,9 @@ function CreateUser() {
                 required
             />
             {formError.phoneNumber&& (<span className="formError">{formError.phoneNumber}</span>)}
+
+
+
             <label htmlFor="role">Role</label>
             <select id="role" name="role" value={form.role} onChange={handleChange}>
                 <option value="" disabled>Select role</option>
@@ -171,7 +184,7 @@ function CreateUser() {
                         setUser(isAdmin ? UserType.ADMIN : UserType.USER);
                     }}
                 />
-                <label >Create as Admin</label>
+                <label >Create Admin</label>
             </div>
 
             <div>

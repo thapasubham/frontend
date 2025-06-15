@@ -1,11 +1,11 @@
-import {userTypes} from "../../../types/user.ts";
+import {userPayload} from "../../../types/user.ts";
 import {editUser} from "../../../api/user/editUser.ts";
 import {USER_DOES_NOT_FOUND} from "../../../constants/constant.ts";
 import axios from "axios";
 
 
 describe("Signup api tests", () => {
-    const user: userTypes ={
+    const user: userPayload ={
         id: 0,
         firstname: "Subham",
         lastname: "Thapa",

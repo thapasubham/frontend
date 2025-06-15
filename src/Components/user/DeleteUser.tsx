@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import { deleteUser } from "../../api/user/deleteUser";
 import {getUserByid} from "../../api/user/getUserByid.ts";
-import {userCreate} from "../../types/user.ts";
+import {userPayload} from "../../types/user.ts";
 import {Refresh} from "../../api/refresh/refresh.ts";
 import {USER_DELETED} from "../../constants/constant.ts";
 import "./delete.css"
@@ -12,7 +12,7 @@ function DeleteUser() {
     const nagivate = useNavigate();
     const {userStatus}  = useAuth()
     const [error, setError] = useState("");
-    const [user, setUser] = useState<userCreate>({
+    const [user, setUser] = useState<userPayload>({
     phoneNumber: "",
     email: "",
     id: 0,

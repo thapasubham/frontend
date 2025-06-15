@@ -1,4 +1,3 @@
-import { getUserByid } from "../../../api/user/getUserByid.ts";
 import { EditUser } from "../../../Components/user";
 import {fireEvent, render, screen, waitFor} from "@testing-library/react";
 import { useParams } from "react-router-dom";
@@ -7,12 +6,13 @@ import AuthProvider from "../../../auth/AuthContext.tsx";
 import {mockedUsedNavigate} from "../../../../jest.setup.ts";
 import {Refresh} from "../../../api/refresh/refresh.ts";
 import {editUser} from "../../../api/user/editUser.ts";
+import {userRole} from "../../../api/user/userRole.ts";
 
 
 jest.mock('../../../api/user/editUser');
 
 
-jest.mock('../../../api/user/getUserByid');
+jest.mock('../../../api/user/userRole.ts');
 jest.mock('../../../api/refresh/refresh');
 jest.mock('../../../api/user/editUser', () => ({
     editUser: jest.fn(),
@@ -25,6 +25,15 @@ describe("Edit User", () => {
         (useParams as jest.Mock).mockReturnValue({ id: user.id, userType: "users" });
     });
 
+    const roles =[{
+        id:3,
+        name: "admin"
+    },
+        {
+            id:4,
+            name: "user"
+        }
+    ]
     const user = {
         id: 5,
         firstname: "John",
@@ -33,12 +42,12 @@ describe("Edit User", () => {
         phoneNumber: "9748515354"
     }
     it("User doesnt exists", async () => {
-        (getUserByid as jest.Mock).mockReturnValue({ status: 404, message: USER_DOES_NOT_FOUND });
+        (userRole as jest.Mock).mockReturnValue({ status: 404, message: USER_DOES_NOT_FOUND });
         window.alert = jest.fn();
 
         renderComponent();
         await waitFor(() => {
-            expect(getUserByid).toHaveBeenCalledTimes(1);
+            expect(userRole).toHaveBeenCalledTimes(1);
             expect(screen.getByTestId("error")).toBeInTheDocument()
         })
     })
@@ -46,7 +55,7 @@ describe("Edit User", () => {
 
 
     it('Unauthorized sends to login', async () => {
-        (getUserByid as jest.Mock).mockResolvedValue({ status: 401, data: UNAUTHORIZED_ERROR });
+        (userRole as jest.Mock).mockResolvedValue({ status: 401, message: UNAUTHORIZED_ERROR });
         (Refresh as jest.Mock).mockResolvedValue(false);
          renderComponent()
 
@@ -59,20 +68,20 @@ describe("Edit User", () => {
     });
 
     it("Unauthorized cannot access", async () => {
-        (getUserByid as jest.Mock).mockRejectedValue({ status: 403, message: UNAUTHORIZED_ERROR });
+        (userRole as jest.Mock).mockRejectedValue({ status: 403, message: UNAUTHORIZED_ERROR });
 
         renderComponent()
 
         await waitFor(()=> {
 
 
-          expect(getUserByid).toHaveBeenCalledTimes(1);
+          expect(userRole ).toHaveBeenCalledTimes(1);
             expect(screen.getByTestId("error")).toBeInTheDocument()
         });
 
     })
     it("User exists and renders correctly", async () => {
-        (getUserByid as jest.Mock).mockReturnValue({ status: 200, data: user });
+        (userRole as jest.Mock).mockReturnValue({ status: 200, data: {user : user, roles: roles} });
         const { getByTestId } = renderComponent()
 
         await waitFor(() => {
@@ -89,7 +98,7 @@ describe("Edit User", () => {
     })
     it("Handle Submit" ,async () => {
 
-        (getUserByid as jest.Mock).mockReturnValue({ status: 200, data: user });
+        (userRole as jest.Mock).mockReturnValue({ status: 200, data: {user: user, roles: roles} });
         user.email= "";
         const {getByTestId} = renderComponent();
             await waitFor(() => {

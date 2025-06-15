@@ -17,7 +17,7 @@ export async function Refresh(userType: string) {
         }
         );
 
-       console.log(result.data);
+
         setTokens(result.data, userType);
          return true;
     }

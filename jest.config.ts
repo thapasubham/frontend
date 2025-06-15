@@ -10,8 +10,12 @@ const config: Config = {
   collectCoverageFrom: [
     "src/**/*.{ts,tsx}",
     "!src/**/*.types.{ts,tsx}",
+      "!src/**/*Role*.{ts,tsx}",
       "!src/**/constant.{ts,tsx}",
     "!src/**/refresh.{ts,tsx}",
+    "!src/**/setToken.{ts,tsx}",
+    "!src/**/apiHelper.{ts,tsx}",
+
     "!src/**/*.test.{ts,tsx}",
     "!src/**/types/*.{ts,tsx}",
     "!src/**/superTest.{ts,tsx}",

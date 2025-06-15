@@ -1,8 +1,8 @@
 import { screen, render, waitFor, fireEvent } from "@testing-library/react";
 import getUser from "../../../api/user/getUser";
 import UserList from "../../../Components/dashboard/userList.tsx";
-import { userCreate } from "../../../types/user.ts";
-import { useAuth } from "../../../auth/AuthContext.tsx";
+import { userPayload } from "../../../types/user.ts";
+import AuthProvider, { useAuth } from "../../../auth/AuthContext.tsx";
 import {SOMETHING_WENT_WRONG} from "../../../constants/constant.ts";
 import {UserType} from "../../../types/userType.ts";
 
@@ -29,14 +29,14 @@ describe("Dashboard Test", () => {
         (useAuth as jest.Mock).mockResolvedValue({ isLogged: false });
         (getUser as jest.Mock).mockReturnValue([])
 
-        render(<UserList user={UserType.USER} />);
+        render(<UserList user={UserType.USER} verified={true} />);
         expect(mockedUsedNavigate).toHaveBeenCalledWith("/login");
 
     });
     it("Empty users", async () => {
         (useAuth as jest.Mock).mockReturnValue({ isLogged: true });
         (getUser as jest.Mock).mockResolvedValue({status: 404, message: "No User Found"});
-        render(<UserList user={UserType.USER} />);
+        render(<UserList user={UserType.USER} verified={true} />);
         await waitFor(() => {
             const result = screen.getByTestId("error")
 
@@ -47,7 +47,7 @@ describe("Dashboard Test", () => {
     it("Error When fetching the data", async () => {
         (useAuth as jest.Mock).mockReturnValue({ isLogged: true });
         (getUser as jest.Mock).mockRejectedValue(new Error(SOMETHING_WENT_WRONG));
-        render(<UserList user={UserType.USER} />);
+        render(<UserList user={UserType.USER} verified={true} />);
         await waitFor(() => {
             const result = screen.getByTestId("error") as HTMLElement;
 
@@ -58,7 +58,7 @@ describe("Dashboard Test", () => {
     it("Renders users", async () => {
         (useAuth as jest.Mock).mockReturnValue({ isLogged: true });
 
-        const users: userCreate[] = [
+        const users: userPayload[] = [
             {
                 id: 5,
                 firstname: "Subham",
@@ -73,7 +73,7 @@ describe("Dashboard Test", () => {
         (getUser as jest.Mock).mockResolvedValue({status: 200, data: users});
 
 
-        render(<UserList user={UserType.ADMIN} />);
+        render(<AuthProvider><UserList user={UserType.ADMIN} verified={true} /></AuthProvider>);
 
 
         const prevButton = await screen.findByTestId("previous-button") as HTMLButtonElement;

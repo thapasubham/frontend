@@ -8,7 +8,6 @@ isVerified: boolean
   const url =`${apiUrl}/graphql`;
   const filterColumn = filter||"firstname"
 
-  console.log("filterColumn: ", filterColumn);
   const query = `
   query user($search: String, $searchBy: String, $filter: String, $limit: Int!, $offset: Int!, $orderBy: String, $verified: Boolean) {
     ${user}(search: $search, searchBy: $searchBy, filter: $filter, limit: $limit, offset: $offset, orderBy: $orderBy, isVerified: $verified) {
@@ -25,13 +24,12 @@ isVerified: boolean
   const variables = {
     search,
     searchBy,
-    filter,
+    filter: filterColumn,
     limit,
     offset,
     orderBy: orderby,
     verified: isVerified,
   };
-console.log(variables);
   const result = await fetch(url, {
     method: "POST",
     headers: {

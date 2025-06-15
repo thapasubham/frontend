@@ -4,13 +4,14 @@ import {useNavigate, useParams } from "react-router-dom";
 import {Refresh} from "../../api/refresh/refresh.ts";
 import {useAuth} from "../../auth/AuthContext.tsx";
 import {userErrorType} from "../../validation/userFormError.types.ts";
-import validateCreate from "../../validation/validateCreate.ts";
+import { validateCreate, sanitizeInput} from "../../validation/validateCreate.ts";
 import {userRole} from "../../api/user/userRole.ts";
 import {Role} from "../../types/Role.ts";
+import {UserType} from "../../types/userType.ts";
 
 function EditUser() {
     const { id, userType } = useParams();
-  const { userStatus} = useAuth()
+  const { userStatus } = useAuth()
     const [retry,setRetry]= useState(0)
     const [form, setForm] = useState(
         {
@@ -87,8 +88,8 @@ function EditUser() {
         e.preventDefault();
         setRetry(0);
         setError("");
-
-        const errors = validateCreate(form);
+        const payload = sanitizeInput(form)
+        const errors = validateCreate(payload);
         setFormError({...formError, ...errors});
         const hasErrors = Object.values(errors).some((msg) => msg !== "");
         if(hasErrors) {
@@ -98,7 +99,7 @@ function EditUser() {
 
         try {
             //calling the function that does api call
-            const result = await editUser(form, userType as string);
+            const result = await editUser(payload, userType as string);
 
 
             if (result.status === 200) {
@@ -116,14 +117,14 @@ function EditUser() {
             }
         }catch (e)
         {
-            setError(e.message);
+            setError((e as Error).message);
         }
 
     }
     const handleChange = (e: any) => {
         const { name, value } = e.target;
         setForm({ ...form, [name]: name==="role"? Number(value):value });
-        console.log("Handle change", form);
+
     }
     return (
         <>
@@ -173,14 +174,14 @@ function EditUser() {
                         required
                     />
                     {formError.phoneNumber&& (<p className="formError">{formError.phoneNumber}</p>)}
-                    <select id="role" name="role" value={form.role} onChange={handleChange}>
+                    {userStatus ===UserType.ADMIN &&  ( <select id="role" name="role" value={form.role} onChange={handleChange}>
                         <option value="" disabled>Select role</option>
                         {roles.map((role) => (
                             <option key={role.id} value={role.id}>
                                 {role.name}
                             </option>
                         ))}
-                    </select>
+                    </select>)}
                     <button data-testid="submitButton">Submit</button>
                 </form>
             </div>
