@@ -1,4 +1,6 @@
+/*@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');*/
 #root {
+  /*font-family: 'Montserrat', sans-serif;*/
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
@@ -17,7 +19,9 @@
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
-
+button:hover {
+  background: #494848
+}
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -39,4 +43,13 @@
 
 .read-the-docs {
   color: #888;
+}
+
+.errorMessage {
+  color: #ff1717;
+}
+
+.formError {
+  color: #ff1717;
+  text-align: left;
 }

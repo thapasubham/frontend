@@ -1,26 +1,37 @@
-import { delay } from "../delay.ts";
+import { config } from "../apiHelpers.ts";
+import axios, {AxiosError, AxiosResponse} from "axios";
 
-import {userTypes} from "../../types/user.ts";
-import {userData} from "../../types/userData.ts";
-
+const { apiUrl } = config;
 async function loginUser({
   email,
   password,
 }: {
   email: string;
   password: string;
-}) {
-  try {
-    //perfrom network request
-    console.log("Logged in");
-    await delay(1000);
-    const result = userData.some(
-      (u:userTypes) => u.email === email && u.password === password
-    );
-    return result;
-  } catch (e) {
-    return e
-  }
+}, users: string) {
+
+
+
+    try {
+        // perfrom network request
+        const url = `${apiUrl}/${users}/login`;
+        console.log(url);
+        const result = await axios.post(
+            url,
+            {email, password},
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+
+        return {status: result.status, message: result.data};
+    }catch (e) {
+        const {response, message} = e as AxiosError;
+        return { status: 500, message: response ? (response as AxiosResponse).data.message: message }
+    }
 }
 
 export default loginUser;

@@ -66,7 +66,7 @@ describe("Sign up", () => {
                 phoneNumber: "9748214526",
                 password: "password123",
                 confirmPassword: "password123"
-            });
+            }, "users");
 
             expect(window.alert).toHaveBeenCalledWith("User Created");
         });

@@ -1,15 +1,35 @@
-import { delay } from "../delay.ts";
-import { userTypes } from "../../types/user.ts";
+import axios, {AxiosError, AxiosResponse} from "axios";
+import { userPayload } from "../../types/user.ts";
+import { config } from "../apiHelpers.ts";
 
-async function signUp(payload: userTypes) {
+const { apiUrl } = config;
+async function signUp(user: userPayload, users: string) {
+const payload: userPayload = {
+  id: 0,
+  firstname: user.firstname,
+  lastname :user.lastname,
+  email: user.email,
+  phoneNumber :user.phoneNumber,
+  role: user.role,
+  password: user.password,
+  isverified: user.isverified,
+}
+
+
   try {
-    //do the api request here
+    //perform api request here
+    const url = `${apiUrl}/${users||"users"}`;
 
-    await delay(1000);
-    console.log(payload);
-    return { status: 201, message: "User Created" };
+    const result =  await  axios.post(url, payload);
+    const {data} = result;
+    return { status: result.status, message: data.message };
+
   } catch (err) {
-    return { status: 500, message: "Something went wrong" };
+    const {status, response, message} = err as AxiosError;
+
+
+
+    return { status: status , message: response ? (response as AxiosResponse).data : message };
   }
 }
 

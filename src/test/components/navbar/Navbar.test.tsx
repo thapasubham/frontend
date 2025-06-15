@@ -1,18 +1,33 @@
 import { render, screen } from "@testing-library/react";
 import NavBar from "../../../Components/navbar/Navbar.tsx";
-import AuthProvider from "../../../auth/AuthContext.tsx";
+import { useAuth } from "../../../auth/AuthContext.tsx";
 
 
-jest.mock("../../../Components/dashboard/dashboard.tsx", () => () => <div>Home Component</div>);
-jest.mock("../../../Components/about/About.tsx", () => () => <div>About Component</div>);
 
+
+jest.mock("../../../auth/AuthContext.tsx", () => (
+    {
+        useAuth: jest.fn()
+    }
+));
+jest.mock("../../../Components/user/Logout.tsx", () => () => (<p>LogOut</p>))
 describe("NavBar component", () => {
-    it("Displays navigation links", () => {
-        render(<AuthProvider><NavBar /></AuthProvider>);
+    beforeEach(() => {
+        jest.clearAllMocks();
+    })
+    it("Displays navigation links when user not logged in", () => {
+        (useAuth as jest.Mock).mockReturnValue({ isLogged: false });
+        render(<NavBar />);
 
         expect(screen.getByTestId("link_home").textContent).toEqual("Home")
-        expect(screen.getByText("About")).toBeInTheDocument();
-        expect(screen.getByText("Login")).toBeInTheDocument();
+        expect(screen.getByTestId("link_about").textContent).toEqual("About")
+        expect(screen.getByTestId("link_login").textContent).toEqual("Login");
     });
+    it("Displays navigation links when logged in", () => {
+        (useAuth as jest.Mock).mockReturnValue({ isLogged: true });
+        render(<NavBar />);
 
+        expect(screen.getByTestId("link_dashboard").textContent).toEqual("Dashboard")
+        expect(screen.getByText("Logout")).toBeInTheDocument();
+    });
 });

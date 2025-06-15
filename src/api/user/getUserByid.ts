@@ -1,21 +1,27 @@
-import { delay } from "../delay";
-import {userData} from "../../types/userData.ts";
+import {config, getCookie} from "../apiHelpers.ts";
 
-export async function getUserByid(id: number) {
-    try{
-       //make api call here
-        await delay(250)
 
-        const result = userData.find((u)=>u.id === id);
-        if (result===undefined) {
-            return {status: 404, message: "User not found"};
+const {apiUrl}= config;
+export async function getUserByid(id: number, userType: string) {
+  try {
+    //make api call here
+    const url =  `${apiUrl}/${userType}/${id}`;
+    const bearerToken = getCookie("bearerToken") as string;
+    const result = await fetch(url, {
+      method: "GET",
+      headers: {
+        authorization: `Bearer ${bearerToken}`,
 
-        }
-        else {
-            return {status: 200, data: result};
-        }
+      },
+     credentials: "include"
+    });
+    const data = await result.json();
 
-    } catch (e){
-        return {status:404, message:"User not found"};
-    }
+    return {status: result.status, data: data};
+
+  } catch (e) {
+    return { status: 404, message: (e as Error).message };
+  }
 }
+
+

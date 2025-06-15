@@ -1,12 +1,13 @@
-import { userTypes } from "./user";
+import { userPayload } from "./user";
 
-export const users: userTypes[] = [
+export const userData: userPayload[] = [
   {
     id: 5,
     firstname: "Subham",
     lastname: "Thapa",
     email: "subham@gmail.com",
     phoneNumber: "984982683",
+    password: "subham123",
   },
   {
     id: 6,
@@ -15,6 +16,7 @@ export const users: userTypes[] = [
     lastname: "Test",
     email: "john@gmail.com",
     phoneNumber: "984962683",
+    password: "password",
   },
   {
     id: 8,
@@ -23,6 +25,7 @@ export const users: userTypes[] = [
     lastname: "V",
     email: "jonsey@gmail.com",
     phoneNumber: "984925683",
+    password: "password",
   },
   {
     id: 4,
@@ -31,5 +34,6 @@ export const users: userTypes[] = [
     lastname: "Goaling",
     email: "ryan@gmail.com",
     phoneNumber: "984924583",
+    password: "password",
   },
 ];

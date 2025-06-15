@@ -1,17 +1,25 @@
-import { userTypes } from "../../types/user.ts";
-import { delay } from "../delay.ts";
+import {getCookie, config} from "../apiHelpers.ts";
+import axios, {AxiosError} from "axios";
+import {userPayload} from "../../types/user.ts";
 
-export async function editUser(user: userTypes) {
+
+
+const {apiUrl} = config;
+export async function editUser(payload: userPayload, user:string) {
   try {
     //perform api request here
-    if (user.id == 0) {
-      throw new Error("No user");
-    }
-    console.log(user);
-    delay(500);
+   const url = `${apiUrl}/${user}/${payload.id}`;
+      const bearerToken = getCookie("bearerToken") as string;
+   const result =  await  axios.put(url, payload, {
+       headers: {
+        Authorization: `Bearer ${bearerToken}`,
+       }
+   });
     //just return the response
-    return { status: 200, message: "User Updated" };
+    return { status: result.status, message: result.data.message };
   } catch (err) {
-    return { status: 500, message: (err as Error).message };
+      const {status ,message, response} = err as AxiosError;
+    return { status: status , message: response?response.data :message };
+
   }
 }

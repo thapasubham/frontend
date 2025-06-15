@@ -30,12 +30,11 @@
 .user-form input:focus {
     outline: #00c4ff solid 1px;
 }
-
-.show-password {
+.userType{
     align-self: flex-start;
     display: inline-block;
 }
-
 .show-password {
-    border-radius: 10px;
+    align-self: flex-start;
+    display: inline-block;
 }
