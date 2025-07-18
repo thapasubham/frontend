@@ -16,7 +16,8 @@ You can run it using the following ways
 ```
 git clone https://github.com/thapasubham/frontend.git
 ```
-
+- Make sure you create a .env file and add the url of the backend for the api
+  [Backend](https://github.com/thapasubham/subham_uba)
 2. Ensure you have installed Docker.
 3. Enter the directory and run the following command
 
